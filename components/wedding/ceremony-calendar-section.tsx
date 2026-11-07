@@ -262,7 +262,7 @@ export function CeremonyCalendarSection({
             </div>
 
             {/* Live Countdown Boxes */}
-            <div className="grid grid-cols-4 gap-2 sm:gap-3 max-w-md mx-auto my-6">
+            {hasWeddingDate && <div className="grid grid-cols-4 gap-2 sm:gap-3 max-w-md mx-auto my-6">
               {[
                 { value: countdown.days, label: 'Ngày' },
                 { value: countdown.hours, label: 'Giờ' },
@@ -291,10 +291,10 @@ export function CeremonyCalendarSection({
                   </span>
                 </div>
               ))}
-            </div>
+            </div>}
 
             {/* Action Buttons */}
-            <div className="flex flex-wrap items-center justify-center gap-3 mt-2">
+            {hasWeddingDate && <div className="flex flex-wrap items-center justify-center gap-3 mt-2">
               <button
                 type="button"
                 onClick={() =>
@@ -327,7 +327,7 @@ export function CeremonyCalendarSection({
                 <MapPin className="w-4 h-4" />
                 Xem địa điểm
               </a>
-            </div>
+            </div>}
           </ScrollReveal>
         </div>
       </section>
