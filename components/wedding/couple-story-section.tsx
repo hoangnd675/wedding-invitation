@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { ThemeConfig, WeddingInvitationData } from '@/lib/wedding-data'
-import { DoubleHappinessGlyph } from './falling-effects'
+import { ThemeEmblem } from './theme-emblem'
 import { BotanicalBranchSvg } from './hero-section'
 import { ScrollReveal } from './scroll-reveal'
 
@@ -82,9 +82,7 @@ export function SectionHeader({
       </h2>
       <div className="flex items-center justify-center gap-3 mt-3.5" aria-hidden="true">
         <span className="w-12 border-t border-dotted" style={{ borderColor: colors.accent }} />
-        <span className="text-lg leading-none" style={{ color: colors.accent }}>
-          ♥
-        </span>
+        <ThemeEmblem theme={theme} className="w-4 h-4" />
         <span className="w-12 border-t border-dotted" style={{ borderColor: colors.accent }} />
       </div>
     </ScrollReveal>
@@ -195,32 +193,17 @@ export function CoupleStorySection({ data, theme, onOpenLightbox }: CoupleStoryS
             delay={120}
             className="md:col-span-1 flex flex-col items-center justify-center py-2"
           >
-            {theme.id === 'songhy' ? (
-              <div
-                className="w-16 h-16 rounded-full flex items-center justify-center border"
-                style={{
-                  borderColor: colors.accent,
-                  backgroundColor: colors.soft,
-                  color: colors.accent,
-                }}
-              >
-                <DoubleHappinessGlyph className="w-9 h-9" color={colors.accent} />
-              </div>
-            ) : (
-              <svg
-                viewBox="0 0 64 64"
-                className="w-16 h-16"
-                style={{ color: colors.accent }}
-                aria-hidden="true"
-              >
-                <circle cx="25" cy="38" r="14" fill="none" stroke="currentColor" strokeWidth="3.5" />
-                <circle cx="39" cy="38" r="14" fill="none" stroke="currentColor" strokeWidth="3.5" />
-                <path
-                  d="M32 18c-2-3-7-2.4-7 1.2 0 3 7 7.3 7 7.3s7-4.3 7-7.3c0-3.6-5-4.2-7-1.2z"
-                  fill="currentColor"
-                />
-              </svg>
-            )}
+            <div
+              className="w-16 h-16 rounded-full flex items-center justify-center border"
+              style={{
+                borderColor: colors.accent,
+                backgroundColor: colors.soft,
+                color: colors.accent,
+                boxShadow: `0 8px 24px ${colors.accent}18`,
+              }}
+            >
+              <ThemeEmblem theme={theme} className="w-9 h-9" />
+            </div>
           </ScrollReveal>
 
           {/* Bride Card */}
