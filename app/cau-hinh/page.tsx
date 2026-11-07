@@ -80,6 +80,8 @@ export default function ConfigurationStudioPage() {
   const [showLivePreview, setShowLivePreview] = useState(false)
   const [previewCoverOpen, setPreviewCoverOpen] = useState(true)
   const [savedNotice, setSavedNotice] = useState(false)
+  const [musicUploading, setMusicUploading] = useState(false)
+  const [musicUploadError, setMusicUploadError] = useState('')
   const [newPhotoUrl, setNewPhotoUrl] = useState('')
   const [newPhotoCaption, setNewPhotoCaption] = useState('')
   const [newPhotoEffect, setNewPhotoEffect] = useState<PhotoScrollEffect>('fade-in')
@@ -105,20 +107,42 @@ export default function ConfigurationStudioPage() {
     reader.readAsDataURL(file)
   }
 
-  const handleAudioUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
+  const handleAudioUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const input = e.currentTarget
+    const file = input.files?.[0]
     if (!file) return
-    const reader = new FileReader()
-    reader.onload = () => {
-      if (typeof reader.result === 'string') {
-        updateData({
-          musicSrc: reader.result,
-          musicTitle: file.name.replace(/\.[^/.]+$/, ''),
-        })
-        triggerSavedNotice()
-      }
+
+    setMusicUploadError('')
+    const extension = file.name.split('.').pop()?.toLowerCase()
+    const allowed = ['mp3', 'wav', 'm4a', 'aac', 'ogg', 'webm']
+    if (!extension || !allowed.includes(extension)) {
+      setMusicUploadError('Định dạng chưa hỗ trợ. Hãy chọn MP3, WAV, M4A, AAC, OGG hoặc WEBM.')
+      input.value = ''
+      return
     }
-    reader.readAsDataURL(file)
+    if (file.size > 15 * 1024 * 1024) {
+      setMusicUploadError('File nhạc vượt quá 15 MB. Vui lòng chọn file nhẹ hơn.')
+      input.value = ''
+      return
+    }
+
+    setMusicUploading(true)
+    try {
+      const form = new FormData()
+      form.append('file', file)
+      const response = await fetch('/api/admin/music-upload', { method: 'POST', body: form })
+      const result = await response.json()
+      if (!response.ok || !result.url) {
+        throw new Error(result.error || 'Không thể tải file nhạc lên.')
+      }
+      updateData({ musicSrc: result.url, musicTitle: result.title || file.name })
+      triggerSavedNotice()
+    } catch (error) {
+      setMusicUploadError(error instanceof Error ? error.message : 'Tải nhạc thất bại. Vui lòng thử lại.')
+    } finally {
+      setMusicUploading(false)
+      input.value = ''
+    }
   }
 
   const handleAddAlbumPhoto = (src: string, caption?: string) => {
@@ -428,14 +452,18 @@ export default function ConfigurationStudioPage() {
                     </label>
                     <label className="min-h-[42px] px-4 py-2 rounded-xl border border-dashed border-stone-400 hover:border-red-700 bg-stone-50 flex items-center justify-center gap-2 text-sm font-semibold cursor-pointer">
                       <Upload className="w-4 h-4 text-red-700" />
-                      <span>Chọn file nhạc từ máy tính / điện thoại</span>
+                      <span>{musicUploading ? 'Đang tải nhạc lên...' : 'Chọn file nhạc từ máy tính / điện thoại'}</span>
                       <input
                         type="file"
-                        accept="audio/*"
+                        accept=".mp3,.wav,.m4a,.aac,.ogg,.webm,audio/*"
                         onChange={handleAudioUpload}
+                        disabled={musicUploading}
                         className="hidden"
                       />
                     </label>
+                    <p className="mt-2 text-xs text-stone-500">Hỗ trợ MP3, WAV, M4A, AAC, OGG, WEBM · tối đa 15 MB. Nhạc được lưu trực tuyến để phát trên thiết bị khác.</p>
+                    {musicUploading && <p role="status" className="mt-2 text-xs font-medium text-amber-700">Đang tải file lên kho nhạc...</p>}
+                    {musicUploadError && <p role="alert" className="mt-2 text-xs font-medium text-red-700">{musicUploadError}</p>}
                   </div>
                 </div>
               </div>
