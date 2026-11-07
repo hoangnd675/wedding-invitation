@@ -184,35 +184,54 @@ export function useWeddingStore() {
     return newWish
   }, [updateData])
 
-  const addRsvp = useCallback((rsvp: Omit<RsvpSubmission, 'id' | 'createdAt'>) => {
+  const addRsvp = useCallback(async (rsvp: Omit<RsvpSubmission, 'id' | 'createdAt'>) => {
+    if (!hasSupabaseConfig()) {
+      throw new Error('Thiệp cưới chưa kết nối Supabase. Vui lòng thử lại sau.')
+    }
+
+    const safeRsvp = {
+      full_name: rsvp.name.trim().slice(0, 120),
+      email: '',
+      phone: rsvp.phone.trim().slice(0, 40),
+      attendance_status: rsvp.attending === 'yes' ? 'attending' : 'not_attending',
+      guest_count: rsvp.attending === 'yes' ? rsvp.guests : 0,
+      wishes: rsvp.message.trim().slice(0, 1000),
+      attending: rsvp.attending,
+      guests: rsvp.attending === 'yes' ? rsvp.guests : 0,
+      side: rsvp.side,
+      message: rsvp.message.trim().slice(0, 1000),
+    }
+
+    // Chỉ cập nhật giao diện sau khi Supabase xác nhận đã ghi dữ liệu.
+    await insertRemoteRow('rsvps', safeRsvp)
+
     const newRsvp: RsvpSubmission = {
       ...rsvp,
       id: 'r-' + Date.now(),
-      createdAt: 'Vừa xong',
+      createdAt: new Date().toLocaleString('vi-VN'),
     }
+
     updateData((prev) => {
       const updatedWishes =
-        rsvp.message && rsvp.message.trim().length > 0
-          ? [
-              {
-                id: 'w-rsvp-' + Date.now(),
-                name: rsvp.name,
-                message: rsvp.message.trim(),
-                createdAt: 'Vừa xong',
-              },
-              ...prev.wishes,
-            ]
+        rsvp.message.trim().length > 0
+          ? [{
+              id: 'w-rsvp-' + Date.now(),
+              name: rsvp.name,
+              message: rsvp.message.trim(),
+              createdAt: 'Vừa xong',
+            }, ...prev.wishes]
           : prev.wishes
-      return {
-        ...prev,
-        rsvps: [newRsvp, ...prev.rsvps],
-        wishes: updatedWishes,
-      }
+
+      return { ...prev, rsvps: [newRsvp, ...prev.rsvps], wishes: updatedWishes }
     }, false)
-    if (hasSupabaseConfig()) {
-      insertRemoteRow('rsvps', { full_name: rsvp.name.slice(0, 120), email: '', phone: rsvp.phone.slice(0, 40), attendance_status: rsvp.attending === 'yes' ? 'attending' : 'not_attending', guest_count: rsvp.attending === 'yes' ? rsvp.guests : 0, wishes: rsvp.message.slice(0, 1000), attending: rsvp.attending, guests: rsvp.attending === 'yes' ? rsvp.guests : 0, side: rsvp.side, message: rsvp.message.slice(0, 1000) }).catch(console.error)
-      if (rsvp.message.trim()) insertRemoteRow('wedding_wishes', { name: rsvp.name.slice(0, 80), message: rsvp.message.slice(0, 1000) }).catch(console.error)
+
+    if (rsvp.message.trim()) {
+      void insertRemoteRow('wedding_wishes', {
+        name: rsvp.name.slice(0, 80),
+        message: rsvp.message.trim().slice(0, 1000),
+      }).catch((error) => console.error('Không lưu được lời chúc đi kèm RSVP:', error))
     }
+
     return newRsvp
   }, [updateData])
 
