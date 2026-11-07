@@ -275,9 +275,6 @@ export default function ConfigurationStudioPage() {
               <h1 className="text-base sm:text-lg font-bold text-stone-900 leading-tight">
                 Trình Cấu Hình Thiệp Cưới
               </h1>
-              <p className="text-xs text-stone-500">
-                Tuỳ chỉnh toàn bộ chủ đề, nhạc nền, hình ảnh, tên &amp; ngày cưới
-              </p>
             </div>
           </div>
 
@@ -299,6 +296,8 @@ export default function ConfigurationStudioPage() {
 
             <Link
               href="/"
+              target="_blank"
+              rel="noopener noreferrer"
               className="min-h-[40px] px-4 py-1.5 rounded-xl bg-red-800 hover:bg-red-700 text-white text-xs sm:text-sm font-semibold inline-flex items-center gap-1.5 shadow-xs"
             >
               <Eye className="w-4 h-4" />
@@ -459,11 +458,8 @@ export default function ConfigurationStudioPage() {
                   <div>
                     <h2 className="text-lg font-bold flex items-center gap-2">
                       <Music className="w-5 h-5 text-red-700" />
-                      Nhạc nền từ thư mục <code className="text-xs bg-stone-100 px-2 py-0.5 rounded">public/music/</code>
+                      Nhạc nền
                     </h2>
-                    <p className="text-xs sm:text-sm text-stone-500">
-                      Tự động phát êm ái ngay khi khách nhấn &ldquo;Mở thiệp&rdquo;
-                    </p>
                   </div>
 
                   <label className="inline-flex items-center gap-2 text-sm font-semibold cursor-pointer">
@@ -503,7 +499,6 @@ export default function ConfigurationStudioPage() {
                         <div className="min-w-0">
                           <p className="font-bold text-sm text-stone-900 truncate">{track.title}</p>
                           <p className="text-xs text-stone-500 truncate">{track.artist}</p>
-                          <p className="text-[11px] text-stone-400 font-mono mt-0.5">{track.src}</p>
                         </div>
                         <span
                           className={`px-2.5 py-1 rounded-full text-xs font-semibold shrink-0 ${
@@ -1488,29 +1483,21 @@ export default function ConfigurationStudioPage() {
         </div>
 
         {showLivePreview && (
-          <div className="lg:col-span-6">
-            <div className="sticky top-20 rounded-2xl border-4 border-stone-800 bg-stone-900 shadow-2xl overflow-hidden">
-              <div className="bg-stone-800 text-white px-4 py-2 flex items-center justify-between text-xs">
+          <div className="fixed inset-0 z-[100] bg-black/70 p-2 sm:p-5 flex items-center justify-center">
+            <section role="dialog" aria-modal="true" aria-label="Xem trước trực tiếp" className="w-full h-full max-w-5xl rounded-2xl border-4 border-stone-800 bg-stone-900 shadow-2xl overflow-hidden flex flex-col">
+              <div className="bg-stone-800 text-white px-4 py-3 flex items-center justify-between gap-3 text-sm shrink-0">
                 <span className="font-semibold">Xem trước trực tiếp</span>
-                <button
-                  type="button"
-                  onClick={() => setPreviewCoverOpen((prev) => !prev)}
-                  className="px-2.5 py-1 rounded bg-white/15 hover:bg-white/25 font-medium cursor-pointer"
-                >
-                  {previewCoverOpen ? 'Xem màn hình Phong bì' : 'Mở vào Thiệp chính'}
-                </button>
+                <div className="flex items-center gap-2">
+                  <button type="button" onClick={() => setPreviewCoverOpen((prev) => !prev)} className="px-3 py-1.5 rounded-lg bg-white/15 hover:bg-white/25 font-medium cursor-pointer">
+                    {previewCoverOpen ? 'Xem màn hình Phong bì' : 'Mở vào Thiệp chính'}
+                  </button>
+                  <button type="button" onClick={() => setShowLivePreview(false)} aria-label="Đóng xem trước" className="w-8 h-8 rounded-lg bg-white/15 hover:bg-white/25 font-bold text-lg cursor-pointer">×</button>
+                </div>
               </div>
-              <div className="h-[78vh] overflow-y-auto bg-white relative">
-                <WeddingInvitationView
-                  data={data}
-                  initialCoverOpen={previewCoverOpen}
-                  onCoverOpenChange={setPreviewCoverOpen}
-                  onAddRsvp={addRsvp}
-                  onAddWish={addWish}
-                  onAddSharedPhoto={addSharedPhoto}
-                />
+              <div className="flex-1 min-h-0 overflow-y-auto bg-white relative">
+                <WeddingInvitationView data={data} initialCoverOpen={previewCoverOpen} onCoverOpenChange={setPreviewCoverOpen} onAddRsvp={addRsvp} onAddWish={addWish} onAddSharedPhoto={addSharedPhoto} />
               </div>
-            </div>
+            </section>
           </div>
         )}
       </div>
