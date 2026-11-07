@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type FormEvent } from 'react'
 import { useSearchParams } from 'next/navigation'
 
 type Couple = { id: string; slug: string; groom_name: string; bride_name: string; status: 'active' | 'archived' }
@@ -24,7 +24,7 @@ export function CoupleManager() {
 
   useEffect(() => { void refresh() }, [])
 
-  const createCouple = async (event: React.FormEvent) => {
+  const createCouple = async (event: FormEvent) => {
     event.preventDefault()
     setCreating(true); setError(''); setNotice('')
     try {
