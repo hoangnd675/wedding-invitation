@@ -7,9 +7,11 @@ import {
   RsvpSubmission,
   SharedGuestPhoto,
   ThemeId,
+  FontPresetId,
   WeddingInvitationData,
   WeddingWish,
 } from '@/lib/wedding-data'
+import { getFontPreset } from '@/lib/wedding-fonts'
 import { EnvelopeCover } from './envelope-cover'
 import { FallingEffects } from './falling-effects'
 import { HeroSection } from './hero-section'
@@ -24,6 +26,7 @@ interface WeddingInvitationViewProps {
   themeOverride?: ThemeId
   particleOverride?: ParticleEffectType
   musicOverride?: string
+  fontPresetOverride?: FontPresetId
   initialCoverOpen?: boolean
   onCoverOpenChange?: (open: boolean) => void
   onAddRsvp: (rsvp: Omit<RsvpSubmission, 'id' | 'createdAt'>) => void | Promise<unknown>
@@ -36,6 +39,7 @@ export function WeddingInvitationView({
   themeOverride,
   particleOverride,
   musicOverride,
+  fontPresetOverride,
   initialCoverOpen = false,
   onCoverOpenChange,
   onAddRsvp,
@@ -43,7 +47,8 @@ export function WeddingInvitationView({
   onAddSharedPhoto,
 }: WeddingInvitationViewProps) {
   const activeThemeId = themeOverride || data.themeId
-  const theme = getThemeById(activeThemeId)
+  const baseTheme = getThemeById(activeThemeId)
+  const theme = { ...baseTheme, fonts: getFontPreset(fontPresetOverride ?? data.fontPreset ?? 'theme', baseTheme.fonts) }
   const { colors, fonts } = theme
 
   const [isOpened, setIsOpened] = useState(initialCoverOpen)
