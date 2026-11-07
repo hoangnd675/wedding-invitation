@@ -9,9 +9,44 @@ import {
   SharedGuestPhoto,
   ThemeId,
 } from './wedding-data'
+import { hasSupabaseConfig, supabaseHeaders, supabaseRestUrl, supabaseStorageUrl, supabasePublicStorageUrl } from './supabase-rest'
 
 const STORAGE_KEY = 'thiep_cuoi_config_v1'
 const SYNC_EVENT = 'thiep_cuoi_config_updated'
+let configSaveTimer: ReturnType<typeof setTimeout> | undefined
+
+async function saveRemoteConfig(data: WeddingInvitationData) {
+  const { wishes: _wishes, rsvps: _rsvps, sharedPhotos: _photos, ...config } = data
+  const response = await fetch('/api/wedding-config', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ config }) })
+  if (!response.ok) throw new Error('Không thể lưu cấu hình lên máy chủ.')
+}
+
+async function insertRemoteRow(table: string, row: Record<string, unknown>) {
+  const response = await fetch(supabaseRestUrl(table), { method: 'POST', headers: supabaseHeaders({ 'Content-Type': 'application/json', Prefer: 'return=minimal' }), body: JSON.stringify(row) })
+  if (!response.ok) throw new Error('Không thể lưu dữ liệu trực tuyến.')
+}
+
+async function loadRemoteData(): Promise<Partial<WeddingInvitationData> | null> {
+  if (!hasSupabaseConfig()) return null
+  const [configRes, wishesRes, photosRes, rsvpRes] = await Promise.all([
+    fetch('/api/wedding-config', { cache: 'no-store' }),
+    fetch(supabaseRestUrl('wedding_wishes?select=id,name,message,created_at&order=created_at.desc&limit=100'), { headers: supabaseHeaders(), cache: 'no-store' }),
+    fetch(supabaseRestUrl('guest_photos?select=id,guest_name,caption,image_url,created_at&order=created_at.desc&limit=100'), { headers: supabaseHeaders(), cache: 'no-store' }),
+    fetch('/api/admin/rsvps', { cache: 'no-store' }),
+  ])
+  if (!configRes.ok) throw new Error('Không thể tải cấu hình thiệp.')
+  const config = (await configRes.json())?.config || {}
+  const wishes = wishesRes.ok ? await wishesRes.json() : []
+  const photos = photosRes.ok ? await photosRes.json() : []
+  const rsvps = rsvpRes.ok ? (await rsvpRes.json()).rsvps || [] : []
+  const dateText = (value: string) => value ? new Date(value).toLocaleString('vi-VN') : 'Vừa xong'
+  return {
+    ...config,
+    wishes: wishes.map((x: any) => ({ id: x.id, name: x.name, message: x.message, createdAt: dateText(x.created_at) })),
+    sharedPhotos: photos.map((x: any) => ({ id: x.id, guestName: x.guest_name, caption: x.caption, src: x.image_url, createdAt: dateText(x.created_at) })),
+    rsvps: rsvps.map((x: any) => ({ id: x.id, name: x.full_name, attending: x.attending, guests: x.guests, phone: x.phone || '', side: x.side, message: x.message || '', createdAt: dateText(x.created_at) })),
+  }
+}
 
 export function loadWeddingData(): WeddingInvitationData {
   if (typeof window === 'undefined') return DEFAULT_WEDDING_DATA
@@ -55,6 +90,13 @@ export function useWeddingStore() {
   useEffect(() => {
     setData(loadWeddingData())
     setHydrated(true)
+    let active = true
+    if (hasSupabaseConfig()) loadRemoteData().then((remote) => {
+      if (!active || !remote) return
+      const next = { ...loadWeddingData(), ...remote }
+      saveWeddingData(next as WeddingInvitationData)
+      setData(next as WeddingInvitationData)
+    }).catch((error) => console.error('Đồng bộ trực tuyến thất bại:', error))
 
     const handleStorage = (e: StorageEvent) => {
       if (e.key === STORAGE_KEY) {
@@ -74,6 +116,7 @@ export function useWeddingStore() {
     window.addEventListener('storage', handleStorage)
     window.addEventListener(SYNC_EVENT, handleCustom)
     return () => {
+      active = false
       window.removeEventListener('storage', handleStorage)
       window.removeEventListener(SYNC_EVENT, handleCustom)
     }
@@ -84,6 +127,10 @@ export function useWeddingStore() {
       setData((prev) => {
         const next = typeof updater === 'function' ? updater(prev) : { ...prev, ...updater }
         saveWeddingData(next)
+        if (configSaveTimer) clearTimeout(configSaveTimer)
+        configSaveTimer = setTimeout(() => {
+          if (hasSupabaseConfig()) saveRemoteConfig(next).catch((error) => console.error('Lưu cấu hình trực tuyến thất bại:', error))
+        }, 900)
         return next
       })
     },
@@ -104,10 +151,8 @@ export function useWeddingStore() {
       id: 'w-' + Date.now(),
       createdAt: 'Vừa xong',
     }
-    updateData((prev) => ({
-      ...prev,
-      wishes: [newWish, ...prev.wishes],
-    }))
+    updateData((prev) => ({ ...prev, wishes: [newWish, ...prev.wishes] }))
+    if (hasSupabaseConfig()) insertRemoteRow('wedding_wishes', { name: wish.name.slice(0, 80), message: wish.message.slice(0, 1000) }).catch(console.error)
     return newWish
   }, [updateData])
 
@@ -136,6 +181,10 @@ export function useWeddingStore() {
         wishes: updatedWishes,
       }
     })
+    if (hasSupabaseConfig()) {
+      insertRemoteRow('rsvps', { full_name: rsvp.name.slice(0, 120), email: '', phone: rsvp.phone.slice(0, 40), attendance_status: rsvp.attending === 'yes' ? 'attending' : 'not_attending', guest_count: rsvp.attending === 'yes' ? rsvp.guests : 0, wishes: rsvp.message.slice(0, 1000), attending: rsvp.attending, guests: rsvp.attending === 'yes' ? rsvp.guests : 0, side: rsvp.side, message: rsvp.message.slice(0, 1000) }).catch(console.error)
+      if (rsvp.message.trim()) insertRemoteRow('wedding_wishes', { name: rsvp.name.slice(0, 80), message: rsvp.message.slice(0, 1000) }).catch(console.error)
+    }
     return newRsvp
   }, [updateData])
 
@@ -145,10 +194,17 @@ export function useWeddingStore() {
       id: 'sp-' + Date.now(),
       createdAt: 'Vừa xong',
     }
-    updateData((prev) => ({
-      ...prev,
-      sharedPhotos: [newPhoto, ...prev.sharedPhotos],
-    }))
+    if (hasSupabaseConfig() && photo.src.startsWith('data:image/')) {
+      const blob = await (await fetch(photo.src)).blob()
+      if (!['image/jpeg', 'image/png', 'image/webp'].includes(blob.type) || blob.size > 5 * 1024 * 1024) throw new Error('Ảnh phải là JPG, PNG hoặc WebP và tối đa 5 MB.')
+      const ext = blob.type === 'image/png' ? 'png' : blob.type === 'image/webp' ? 'webp' : 'jpg'
+      const path = `guest/${Date.now()}-${crypto.randomUUID()}.${ext}`
+      const upload = await fetch(supabaseStorageUrl(`guest-photos/${path}`), { method: 'POST', headers: supabaseHeaders({ 'Content-Type': blob.type, 'x-upsert': 'false' }), body: blob })
+      if (!upload.ok) throw new Error('Không tải được ảnh lên kho lưu trữ.')
+      newPhoto.src = supabasePublicStorageUrl(`guest-photos/${path}`)
+      await insertRemoteRow('guest_photos', { guest_name: photo.guestName.slice(0, 80), caption: photo.caption.slice(0, 300), image_url: newPhoto.src })
+    }
+    updateData((prev) => ({ ...prev, sharedPhotos: [newPhoto, ...prev.sharedPhotos] }))
     return newPhoto
   }, [updateData])
 
