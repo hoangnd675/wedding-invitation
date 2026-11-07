@@ -621,7 +621,7 @@ export default function ConfigurationStudioPage() {
               <div className="pt-4 border-t border-stone-200 grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
                   <label className="block text-xs font-semibold uppercase text-stone-600 mb-1">
-                    Ngày cưới (Tự cập nhật Lịch &amp; Đếm ngược)
+                    Ngày cưới
                   </label>
                   <input
                     type="date"
