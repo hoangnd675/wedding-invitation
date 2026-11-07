@@ -20,6 +20,8 @@ import {
   ArrowDown,
   ArrowUp,
   Check,
+  ChevronDown,
+  ChevronUp,
   Download,
   Eye,
   Heart,
@@ -80,6 +82,7 @@ export default function ConfigurationStudioPage() {
   } = useWeddingStore()
 
   const [activeTab, setActiveTab] = useState<ConfigTab>('theme-music')
+  const [expandedThemeSections, setExpandedThemeSections] = useState({ theme: true, fonts: true, effects: true, music: true })
   const [showLivePreview, setShowLivePreview] = useState(false)
   const [previewCoverOpen, setPreviewCoverOpen] = useState(true)
   const [savedNotice, setSavedNotice] = useState(false)
@@ -338,11 +341,16 @@ export default function ConfigurationStudioPage() {
                   <Palette className="w-5 h-5 text-red-700" />
                   Chọn Chủ đề Thiệp cưới
                 </h2>
-                <p className="text-xs sm:text-sm text-stone-500 mb-4">
-                  Mỗi chủ đề tự động đồng bộ bảng màu, phông chữ, biểu tượng chữ Song Hỷ trên phong bì và các vật thể rơi.
-                </p>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                <div className="flex items-start justify-between gap-3">
+                  <p className="text-xs sm:text-sm text-stone-500 mb-4">
+                    Mỗi chủ đề tự động đồng bộ bảng màu, phông chữ, biểu tượng chữ Song Hỷ trên phong bì và các vật thể rơi.
+                  </p>
+                  <button type="button" onClick={() => setExpandedThemeSections((v) => ({ ...v, theme: !v.theme }))} aria-expanded={expandedThemeSections.theme} className="shrink-0 inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold text-stone-700 bg-stone-100 hover:bg-stone-200">
+                    {expandedThemeSections.theme ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                    {expandedThemeSections.theme ? 'Thu nhỏ' : 'Mở rộng'}
+                  </button>
+                </div>
+                {expandedThemeSections.theme && <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
                   {WEDDING_THEMES.map((t) => {
                     const active = data.themeId === t.id
                     return (
@@ -390,7 +398,7 @@ export default function ConfigurationStudioPage() {
                       </button>
                     )
                   })}
-                </div>
+                </div>}
               </div>
 
               <div className="bg-white rounded-2xl p-3.5 sm:p-5 lg:p-6 border border-stone-200 shadow-2xs">
@@ -401,14 +409,20 @@ export default function ConfigurationStudioPage() {
                 <p className="text-xs sm:text-sm text-stone-500 mb-4">
                   Chọn bộ phông cho toàn bộ thiệp. Thay đổi sẽ được lưu vào cấu hình chính và đồng bộ với khách xem.
                 </p>
-                <FontStylePicker
+                <div className="flex justify-end mb-3">
+                  <button type="button" onClick={() => setExpandedThemeSections((v) => ({ ...v, fonts: !v.fonts }))} aria-expanded={expandedThemeSections.fonts} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold text-stone-700 bg-stone-100 hover:bg-stone-200">
+                    {expandedThemeSections.fonts ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                    {expandedThemeSections.fonts ? 'Thu nhỏ' : 'Mở rộng'}
+                  </button>
+                </div>
+                {expandedThemeSections.fonts && <FontStylePicker
                   selected={data.fontPreset || 'theme'}
                   fallbackFonts={WEDDING_THEMES.find((theme) => theme.id === data.themeId)?.fonts || WEDDING_THEMES[0].fonts}
                   onChange={(fontPreset) => {
                     updateData({ fontPreset })
                     triggerSavedNotice()
                   }}
-                />
+                />}
               </div>
 
               <div className="bg-white rounded-2xl p-5 sm:p-6 border border-stone-200 shadow-2xs">
@@ -420,7 +434,13 @@ export default function ConfigurationStudioPage() {
                   Các biểu tượng rơi sẽ tự động đổi màu khớp với chủ đề đang chọn.
                 </p>
 
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5">
+                <div className="flex justify-end mb-3">
+                  <button type="button" onClick={() => setExpandedThemeSections((v) => ({ ...v, effects: !v.effects }))} aria-expanded={expandedThemeSections.effects} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold text-stone-700 bg-stone-100 hover:bg-stone-200">
+                    {expandedThemeSections.effects ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                    {expandedThemeSections.effects ? 'Thu nhỏ' : 'Mở rộng'}
+                  </button>
+                </div>
+                {expandedThemeSections.effects && <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5">
                   {PARTICLE_EFFECT_OPTIONS.map((opt) => {
                     const active = data.particleEffect === opt.value
                     return (
@@ -441,7 +461,7 @@ export default function ConfigurationStudioPage() {
                       </button>
                     )
                   })}
-                </div>
+                </div>}
               </div>
 
               <div className="bg-white rounded-2xl p-3.5 sm:p-5 lg:p-6 border border-stone-200 shadow-2xs space-y-3 sm:space-y-4">
@@ -453,6 +473,11 @@ export default function ConfigurationStudioPage() {
                     </h2>
                   </div>
 
+                  <div className="flex items-center gap-2">
+                  <button type="button" onClick={() => setExpandedThemeSections((v) => ({ ...v, music: !v.music }))} aria-expanded={expandedThemeSections.music} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold text-stone-700 bg-stone-100 hover:bg-stone-200">
+                    {expandedThemeSections.music ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                    {expandedThemeSections.music ? 'Thu nhỏ' : 'Mở rộng'}
+                  </button>
                   <label className="inline-flex items-center gap-2 text-sm font-semibold cursor-pointer">
                     <input
                       type="checkbox"
@@ -465,8 +490,10 @@ export default function ConfigurationStudioPage() {
                     />
                     Tự phát khi mở phong bì
                   </label>
+                  </div>
                 </div>
 
+                {expandedThemeSections.music && <>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {MUSIC_TRACKS.map((track) => {
                     const active = data.musicSrc === track.src
@@ -536,6 +563,7 @@ export default function ConfigurationStudioPage() {
                     {musicUploadError && <p role="alert" className="mt-2 text-xs font-medium text-red-700">{musicUploadError}</p>}
                   </div>
                 </div>
+                </>}
               </div>
             </div>
           )}
