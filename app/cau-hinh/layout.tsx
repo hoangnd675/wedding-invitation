@@ -1,18 +1,16 @@
-'use client'
-import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  const router = useRouter()
-  const [ready, setReady] = useState(false)
-  useEffect(() => {
-    let active = true
-    fetch('/api/admin/session', { cache: 'no-store' }).then((r) => r.json()).then((v) => {
-      if (!active) return
-      if (!v.authenticated) router.replace('/admin-login')
-      else setReady(true)
-    }).catch(() => router.replace('/admin-login'))
-    return () => { active = false }
-  }, [router])
-  if (!ready) return <div className="min-h-screen grid place-items-center bg-stone-100 text-stone-600">Đang kiểm tra quyền quản trị...</div>
-  return <>{children}</>
+import type { ReactNode } from 'react'
+import { redirect } from 'next/navigation'
+import { isAdminSessionValid } from '@/lib/admin-session'
+
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
+export default async function AdminLayout({ children }: { children: ReactNode }) {
+  const authenticated = await isAdminSessionValid()
+
+  if (!authenticated) {
+    redirect('/admin-login')
+  }
+
+  return children
 }
