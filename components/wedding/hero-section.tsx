@@ -245,7 +245,7 @@ export function HeroSection({ data, theme, onOpenLightbox }: HeroSectionProps) {
           <p className="text-base sm:text-lg tracking-[0.28em] uppercase text-white/95 font-medium" style={{ fontFamily: fonts.ui }}>
             {data.weddingDateDisplay} · {data.weddingTime}
           </p>
-          <p className="text-sm sm:text-base text-white/80 italic mt-1.5">{data.lunarDateText}</p>
+          <p className="text-sm sm:text-base text-white/80 italic mt-1.5">{lunarDateText}</p>
         </ScrollReveal>
       </section>
     )
@@ -317,7 +317,7 @@ export function HeroSection({ data, theme, onOpenLightbox }: HeroSectionProps) {
           <p className="text-lg sm:text-xl mt-3 tracking-widest" style={{ fontFamily: fonts.head, color: colors.ink }}>
             {data.weddingDateDisplay} · {data.weddingTime}
           </p>
-          <p className="text-sm sm:text-base italic mt-1" style={{ color: colors.muted }}>{data.lunarDateText}</p>
+          <p className="text-sm sm:text-base italic mt-1" style={{ color: colors.muted }}>{lunarDateText}</p>
         </ScrollReveal>
       </section>
     )
@@ -367,7 +367,7 @@ export function HeroSection({ data, theme, onOpenLightbox }: HeroSectionProps) {
                   Chủ nhật · {data.weddingDateDisplay} · {data.weddingTime}
                 </p>
                 <p className="text-sm mt-1" style={{ color: colors.muted }}>
-                  {data.lunarDateText}
+                  {lunarDateText}
                 </p>
               </div>
             </ScrollReveal>
@@ -593,7 +593,7 @@ export function HeroSection({ data, theme, onOpenLightbox }: HeroSectionProps) {
             Chủ nhật, {data.weddingDateDisplay} · {data.weddingTime}
           </p>
           <p className="text-sm sm:text-base italic mt-1.5" style={{ color: colors.muted }}>
-            {data.lunarDateText}
+            {lunarDateText}
           </p>
 
           {/* Heart Divider */}
