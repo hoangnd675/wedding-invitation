@@ -5,7 +5,7 @@ import { WeddingInvitationView } from '@/components/wedding/wedding-invitation-v
 
 /** Trang thiệp mời dành cho khách xem. */
 export default function GuestWeddingPage() {
-  const { data, hydrated, addRsvp, addWish, addSharedPhoto } = useWeddingStore()
+  const { data, hydrated, loadError, addRsvp, addWish, addSharedPhoto } = useWeddingStore()
 
   // Keep the default theme out of the first paint while the saved theme is loading.
   if (!hydrated) {
@@ -22,6 +22,8 @@ export default function GuestWeddingPage() {
       </main>
     )
   }
+
+  if (loadError) return <main className="min-h-screen grid place-items-center p-6 text-center text-stone-700"><div><h1 className="text-xl font-semibold">Không tìm thấy thiệp cưới</h1><p className="mt-2 text-sm">{loadError}</p></div></main>
 
   return (
     <WeddingInvitationView
