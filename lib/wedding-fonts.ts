@@ -22,7 +22,7 @@ export const FONT_PRESETS: WeddingFontPreset[] = [
   {
     id: 'classic', label: 'Serif cổ điển',
     description: 'Thanh lịch, trang trọng và dễ đọc',
-    fonts: { head: '"Playfair Display", serif', name: '"Great Vibes", cursive', body: '"Lora", serif', ui: '"Quicksand", sans-serif', nameStyle: 'normal' },
+    fonts: { head: '"Playfair Display", serif', name: '"Playfair Display", serif', body: '"Lora", serif', ui: '"Quicksand", sans-serif', nameStyle: 'normal' },
   },
   {
     id: 'editorial', label: 'Tạp chí cao cấp',
@@ -32,7 +32,7 @@ export const FONT_PRESETS: WeddingFontPreset[] = [
   {
     id: 'modern', label: 'Hiện đại tinh gọn',
     description: 'Bố cục sáng rõ, nội dung gọn gàng và dễ xem',
-    fonts: { head: '"Marcellus", serif', name: '"Playfair Display", serif', body: '"Lora", serif', ui: '"Quicksand", sans-serif', nameStyle: 'normal' },
+    fonts: { head: '"Marcellus", serif', name: '"Marcellus", serif', body: '"Lora", serif', ui: '"Quicksand", sans-serif', nameStyle: 'normal' },
   },
 ]
 
