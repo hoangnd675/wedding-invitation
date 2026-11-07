@@ -88,15 +88,36 @@ export function useWeddingStore() {
   const [hydrated, setHydrated] = useState(false)
 
   useEffect(() => {
-    setData(loadWeddingData())
-    setHydrated(true)
     let active = true
-    if (hasSupabaseConfig()) loadRemoteData().then((remote) => {
-      if (!active || !remote) return
-      const next = { ...loadWeddingData(), ...remote }
-      saveWeddingData(next as WeddingInvitationData)
-      setData(next as WeddingInvitationData)
-    }).catch((error) => console.error('Đồng bộ trực tuyến thất bại:', error))
+
+    // Không hiển thị theme mặc định trước khi đã tải cấu hình đã lưu trên máy chủ.
+    const hydrateStore = async () => {
+      const localData = loadWeddingData()
+      if (!hasSupabaseConfig()) {
+        if (active) {
+          setData(localData)
+          setHydrated(true)
+        }
+        return
+      }
+
+      try {
+        const remote = await loadRemoteData()
+        if (!active) return
+        const next = remote
+          ? { ...localData, ...remote } as WeddingInvitationData
+          : localData
+        setData(next)
+        saveWeddingData(next)
+      } catch (error) {
+        console.error('Đồng bộ trực tuyến thất bại:', error)
+        if (active) setData(localData)
+      } finally {
+        if (active) setHydrated(true)
+      }
+    }
+
+    void hydrateStore()
 
     const handleStorage = (e: StorageEvent) => {
       if (e.key === STORAGE_KEY) {
