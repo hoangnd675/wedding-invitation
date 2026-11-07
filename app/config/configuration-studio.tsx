@@ -208,7 +208,7 @@ export default function ConfigurationStudioPage() {
     ]
     const csvCell = (value: unknown) => {
       const raw = String(value ?? '')
-      const safe = /^[\\s]*[=+@-]/.test(raw) ? `'${raw}` : raw
+      const safe = /^\s*[=+@-]/.test(raw) ? `'${raw}` : raw
       return '"' + safe.replace(/"/g, '""') + '"'
     }
     const csv = '\uFEFF' + rows.map((row) => row.map(csvCell).join(',')).join('\r\n')
