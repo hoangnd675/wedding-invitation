@@ -327,7 +327,7 @@ export default function ConfigurationStudioPage() {
                   key={tab.id}
                   type="button"
                   onClick={() => setActiveTab(tab.id as ConfigTab)}
-                  className={`min-h-[42px] px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold inline-flex items-center gap-2 cursor-pointer transition-all ${
+                  className={`min-h-[42px] shrink-0 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold inline-flex items-center gap-2 cursor-pointer transition-all ${
                     active
                       ? 'bg-red-800 text-white shadow-xs'
                       : 'text-stone-700 hover:bg-stone-100'
@@ -338,7 +338,7 @@ export default function ConfigurationStudioPage() {
                 </button>
               )
             })}
-          </div>
+          </nav>
 
           {activeTab === 'theme-music' && (
             <div className="space-y-6">
