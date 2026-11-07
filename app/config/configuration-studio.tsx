@@ -294,15 +294,6 @@ export default function ConfigurationStudioPage() {
               {showLivePreview ? 'Ẩn khung xem thử' : 'Xem thử'}
             </button>
 
-            <Link
-              href="/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="min-h-[42px] flex-1 sm:flex-none justify-center px-3 sm:px-4 py-1.5 rounded-xl bg-red-800 hover:bg-red-700 text-white text-xs sm:text-sm font-semibold inline-flex items-center gap-1.5 shadow-xs"
-            >
-              <Eye className="w-4 h-4" />
-              Mở Trang Khách Xem
-            </Link>
           </div>
         </div>
       </header>
