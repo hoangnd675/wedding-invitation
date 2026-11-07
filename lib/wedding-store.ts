@@ -204,7 +204,7 @@ export function useWeddingStore() {
       }).catch(error => console.error('Không lưu được lời chúc đi kèm RSVP:', error))
     }
     return newRsvp
-  }, [updateData, coupleId])
+  }, [updateData, coupleSlug])
 
   const addSharedPhoto = useCallback(async (photo: Omit<SharedGuestPhoto, 'id' | 'createdAt'>) => {
     const newPhoto: SharedGuestPhoto = { ...photo, id: 'sp-' + Date.now(), createdAt: 'Vừa xong' }
