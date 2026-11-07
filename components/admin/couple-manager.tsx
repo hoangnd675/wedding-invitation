@@ -15,7 +15,7 @@ export function CoupleManager() {
 
   const refresh = async () => {
     const response = await fetch('/api/couples', { cache: 'no-store' })
-    if (response.status === 401) { window.location.replace('/admin-login'); return }
+    if (response.status === 401) { window.location.replace('/config'); return }
     const result = await response.json()
     if (response.ok) setCouples(result.couples || [])
   }
@@ -38,7 +38,7 @@ export function CoupleManager() {
       setGroomName(''); setBrideName('')
       await refresh()
       setNotice(`Đã tạo thiệp: ${window.location.origin}${result.url}`)
-      window.location.assign(`/cau-hinh?couple=${encodeURIComponent(result.couple.slug)}`)
+      window.location.assign(`/config?couple=${encodeURIComponent(result.couple.slug)}`)
     } catch (e) { setError(e instanceof Error ? e.message : 'Có lỗi xảy ra.') }
     finally { setCreating(false) }
   }
@@ -63,7 +63,7 @@ export function CoupleManager() {
         <div className="flex flex-wrap items-end gap-3">
           <label className="grid gap-1 text-sm font-medium">
             Đang chỉnh sửa thiệp
-            <select value={selectedSlug} onChange={e => { setSelectedSlug(e.target.value); window.location.assign(`/cau-hinh?couple=${encodeURIComponent(e.target.value)}`) }} className="min-h-10 rounded-lg border border-stone-300 px-3 bg-white min-w-64">
+            <select value={selectedSlug} onChange={e => { setSelectedSlug(e.target.value); window.location.assign(`/config?couple=${encodeURIComponent(e.target.value)}`) }} className="min-h-10 rounded-lg border border-stone-300 px-3 bg-white min-w-64">
               {couples.map(c => <option key={c.id} value={c.slug}>{c.groom_name} &amp; {c.bride_name}{c.status === 'archived' ? ' (Đã lưu trữ)' : ''}</option>)}
             </select>
           </label>
