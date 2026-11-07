@@ -37,7 +37,7 @@ function getVietQrUrl(gift: BankGiftInfo) {
   const acct = encodeURIComponent(gift.accountNumber.replace(/\s+/g, ''))
   const info = encodeURIComponent(gift.transferNote || 'Mung cuoi')
   const name = encodeURIComponent(gift.accountHolder || '')
-  return `https://img.vietqr.io/image/${bank}-${acct}-compact2.png?addInfo=${info}&accountName=${name}`
+  return `https://img.vietqr.io/image/${bank}-${acct}-compact.png?addInfo=${info}&accountName=${name}`
 }
 
 export function RsvpWishesShareGiftSection({
@@ -767,7 +767,6 @@ export function RsvpWishesShareGiftSection({
       >
         <SectionHeader
           title="Hộp mừng cưới"
-          subtitle="Quà cưới & Mã QR"
           theme={theme}
           indexLabel="08"
         />
@@ -807,7 +806,7 @@ export function RsvpWishesShareGiftSection({
 
                   {/* QR Code Box */}
                   <div
-                    className="w-48 h-48 sm:w-52 sm:h-52 rounded-2xl p-3 border bg-white flex items-center justify-center mb-4 shadow-inner"
+                    className="w-[13.2rem] h-[13.2rem] sm:w-[14.3rem] sm:h-[14.3rem] rounded-2xl p-3 border bg-white flex items-center justify-center mb-4 shadow-inner"
                     style={{ borderColor: colors.line }}
                   >
                     <img
