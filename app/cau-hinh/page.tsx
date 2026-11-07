@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
 import {
   AlbumPhoto,
   MUSIC_TRACKS,
@@ -66,6 +67,8 @@ type ConfigTab =
   | 'rsvp-wishes'
 
 export default function ConfigurationStudioPage() {
+  const searchParams = useSearchParams()
+  const currentCoupleSlug = searchParams.get('couple') || 'hai-hung-mi-mi'
   const {
     data,
     hydrated,
