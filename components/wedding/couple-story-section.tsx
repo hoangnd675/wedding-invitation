@@ -89,6 +89,16 @@ export function SectionHeader({
   )
 }
 
+function splitParentNames(value: string) {
+  const cleaned = value.replace(/^(?:Con trai|Con gái)\s+/i, '').trim()
+  const parts = cleaned.split(/\s*&\s*|\s+và\s+/i)
+  return { father: parts[0]?.trim() || cleaned, mother: parts.slice(1).join(' và ').trim() }
+}
+function familyInfoFontSize(value: string) {
+  const { father, mother } = splitParentNames(value)
+  const longest = Math.max(father.length, mother.length, 1)
+  return `${Math.max(0.68, Math.min(1.12, 30 / longest * 0.92))}rem`
+}
 export function CoupleStorySection({ data, theme, onOpenLightbox }: CoupleStorySectionProps) {
   const { colors, fonts } = theme
 
@@ -181,8 +191,10 @@ export function CoupleStorySection({ data, theme, onOpenLightbox }: CoupleStoryS
               {data.groomFullName}
             </h3>
             {data.groomFamilyInfo && (
-              <p className="mt-2 w-full max-w-none whitespace-nowrap text-center leading-relaxed" style={{ color: colors.muted, fontSize: "clamp(0.75rem, 3.95vw, 1.1rem)" }}>
-                {data.groomFamilyInfo}
+              <p className="mt-2 w-full text-center leading-relaxed flex flex-col items-center" style={{ color: colors.muted, fontSize: familyInfoFontSize(data.groomFamilyInfo) }}>
+                <span>{splitParentNames(data.groomFamilyInfo).father}</span>
+                <span className="font-semibold">và</span>
+                {splitParentNames(data.groomFamilyInfo).mother && <span>{splitParentNames(data.groomFamilyInfo).mother}</span>}
               </p>
             )}
           </ScrollReveal>
@@ -258,8 +270,10 @@ export function CoupleStorySection({ data, theme, onOpenLightbox }: CoupleStoryS
               {data.brideFullName}
             </h3>
             {data.brideFamilyInfo && (
-              <p className="mt-2 w-full max-w-none whitespace-nowrap text-center leading-relaxed" style={{ color: colors.muted, fontSize: "clamp(0.75rem, 3.95vw, 1.1rem)" }}>
-                {data.brideFamilyInfo}
+              <p className="mt-2 w-full text-center leading-relaxed flex flex-col items-center" style={{ color: colors.muted, fontSize: familyInfoFontSize(data.brideFamilyInfo) }}>
+                <span>{splitParentNames(data.brideFamilyInfo).father}</span>
+                <span className="font-semibold">và</span>
+                {splitParentNames(data.brideFamilyInfo).mother && <span>{splitParentNames(data.brideFamilyInfo).mother}</span>}
               </p>
             )}
           </ScrollReveal>
