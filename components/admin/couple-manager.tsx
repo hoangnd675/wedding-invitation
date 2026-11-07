@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState, type FormEvent } from 'react'
+import { ChevronDown, ChevronUp } from 'lucide-react'
 
 type Couple = { id: string; slug: string; groom_name: string; bride_name: string; status: 'active' | 'archived' }
 
@@ -12,6 +13,7 @@ export function CoupleManager() {
   const [creating, setCreating] = useState(false)
   const [error, setError] = useState('')
   const [notice, setNotice] = useState('')
+  const [expanded, setExpanded] = useState(true)
 
   const refresh = async () => {
     const response = await fetch('/api/couples', { cache: 'no-store' })
@@ -56,10 +58,15 @@ export function CoupleManager() {
   return (
     <section className="mx-auto max-w-7xl px-4 pt-5">
       <div className="rounded-2xl border border-rose-200 bg-white p-4 sm:p-5 shadow-sm space-y-4">
-        <div>
-          <h2 className="font-bold text-stone-900">Quản lý nhiều cặp đôi</h2>
-          <p className="text-sm text-stone-500">Mỗi cặp đôi có cấu hình, RSVP, lời chúc, ảnh và đường link riêng.</p>
+        <div className="flex items-center justify-between gap-3">
+          <h2 className="font-bold text-stone-900">Quản lý thiệp mời</h2>
+          <button type="button" onClick={() => setExpanded((value) => !value)} aria-expanded={expanded} className="min-h-9 rounded-lg border border-stone-300 px-3 text-sm font-semibold inline-flex items-center gap-1.5 hover:bg-stone-50">
+            {expanded ? 'Thu nhỏ' : 'Mở rộng'}
+            {expanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+          </button>
         </div>
+        {expanded && (
+        <div className="space-y-4">
         <div className="flex flex-wrap items-end gap-3">
           <label className="grid gap-1 text-sm font-medium">
             Đang chỉnh sửa thiệp
@@ -82,6 +89,8 @@ export function CoupleManager() {
         </form>
         {error && <p role="alert" className="text-sm text-red-700">{error}</p>}
         {notice && <p className="break-all text-sm text-emerald-700">{notice}</p>}
+        </div>
+        )}
       </div>
     </section>
   )
