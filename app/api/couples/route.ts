@@ -42,9 +42,26 @@ export async function POST(request: NextRequest) {
     const config = { ...(sourceConfigs[0]?.config || {}) }
     const groomShortName = groomName.split(/\s+/).slice(-2).join(' ')
     const brideShortName = brideName.split(/\s+/).slice(-2).join(' ')
+    // Giữ lại chủ đề đã chọn, nhưng tuyệt đối không sao chép dữ liệu riêng của đám cưới trước.
     Object.assign(config, {
       groomFullName: groomName, brideFullName: brideName,
-      groomShortName, brideShortName, wishes: [], rsvps: [], sharedPhotos: [],
+      groomShortName, brideShortName,
+      groomFamilyInfo: '', brideFamilyInfo: '',
+      weddingDate: '', weddingTime: '', weddingDateDisplay: '', lunarDateText: '',
+      heroMainPhoto: '', heroLeftPhoto: '', heroRightPhoto: '',
+      groomPhoto: '', bridePhoto: '', ceremonyPhoto: '', quotePhoto: '',
+      quoteText: '', stories: [], venues: [], album: [],
+      musicSrc: '/music/beautiful-in-white.mp3',
+      musicTitle: 'Beautiful In White',
+      wishes: [], rsvps: [], sharedPhotos: [],
+      groomGift: {
+        sideLabel: 'Nhà trai', accountHolder: '', bankName: '',
+        bankCode: '', accountNumber: '', transferNote: '',
+      },
+      brideGift: {
+        sideLabel: 'Nhà gái', accountHolder: '', bankName: '',
+        bankCode: '', accountNumber: '', transferNote: '',
+      },
     })
 
     const root = makeSlug(`${groomShortName}-${brideShortName}`) || 'cap-doi-moi'
