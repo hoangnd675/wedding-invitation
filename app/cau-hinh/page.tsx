@@ -14,6 +14,7 @@ import {
 } from '@/lib/wedding-data'
 import { useWeddingStore } from '@/lib/wedding-store'
 import { WeddingInvitationView } from '@/components/wedding/wedding-invitation-view'
+import { CoupleManager } from '@/components/admin/couple-manager'
 import {
   ArrowDown,
   ArrowUp,
@@ -130,6 +131,7 @@ export default function ConfigurationStudioPage() {
     try {
       const form = new FormData()
       form.append('file', file)
+      form.append('couple', new URLSearchParams(window.location.search).get('couple') || 'hai-hung-mi-mi')
       const response = await fetch('/api/admin/music-upload', { method: 'POST', body: form })
       const result = await response.json()
       if (!response.ok || !result.url) {
@@ -243,6 +245,8 @@ export default function ConfigurationStudioPage() {
           </div>
         </div>
       </header>
+
+      <CoupleManager />
 
       <div className="max-w-7xl mx-auto p-4 sm:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
         <div className={showLivePreview ? 'lg:col-span-6 space-y-6' : 'lg:col-span-12 space-y-6'}>
