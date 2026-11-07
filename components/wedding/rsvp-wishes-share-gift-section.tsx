@@ -556,16 +556,6 @@ export function RsvpWishesShareGiftSection({
       >
         <div className="max-w-4xl mx-auto">
           <ScrollReveal effect="glow-rise">
-            <div
-              className="w-14 h-14 rounded-full mx-auto mb-4 flex items-center justify-center"
-              style={{
-                backgroundColor: colors.soft,
-                color: colors.accentInk,
-                border: `1px solid ${colors.accent}44`,
-              }}
-            >
-              <Camera className="w-6 h-6" />
-            </div>
             <h2
               className="text-2xl sm:text-4xl font-bold mb-3"
               style={{ fontFamily: fonts.head, color: colors.ink }}
@@ -573,7 +563,7 @@ export function RsvpWishesShareGiftSection({
               Bạn có ảnh đẹp của chúng mình?
             </h2>
             <p className="max-w-lg mx-auto text-sm sm:text-base mb-6" style={{ color: colors.muted }}>
-              Gửi tặng cô dâu chú rể những khoảnh khắc bạn đã chụp nhé 🥰
+              Gửi tặng cô dâu chú rể những khoảnh khắc bạn đã chụp nhé!
             </p>
             <button
               type="button"
@@ -765,6 +755,7 @@ export function RsvpWishesShareGiftSection({
           color: colors.ink,
         }}
       >
+        <p className="uppercase tracking-[0.24em] text-xs sm:text-sm font-bold mb-3" style={{ color: colors.accentInk, fontFamily: fonts.ui }}>Quà cưới &amp; Mã QR</p>
         <SectionHeader
           title="Hộp mừng cưới"
           theme={theme}
