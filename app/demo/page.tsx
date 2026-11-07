@@ -47,6 +47,7 @@ const getVietnameseName = (name: string) => {
 export default function DemoShowcasePage() {
   const {
     data,
+    hydrated,
     addRsvp,
     addWish,
     addSharedPhoto,
@@ -72,6 +73,15 @@ export default function DemoShowcasePage() {
 
   const currentThemeObj = getThemeById(demoTheme)
   const currentThemeName = getVietnameseName(currentThemeObj.name)
+
+  // Nạp lựa chọn hiện tại sau khi dữ liệu máy chủ sẵn sàng.
+  // Các thay đổi sau đó trong demo vẫn chỉ nằm trong state cục bộ.
+  useEffect(() => {
+    if (!hydrated) return
+    setDemoTheme(data.themeId)
+    setDemoMusic(data.musicSrc)
+    setDemoFontPreset(data.fontPreset || 'theme')
+  }, [hydrated, data.themeId, data.musicSrc, data.fontPreset])
 
   // Dừng bài nhạc đang nghe thử
   const stopMusicPreview = () => {
