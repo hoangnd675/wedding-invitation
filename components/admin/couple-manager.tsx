@@ -1,13 +1,11 @@
 'use client'
 
 import { useEffect, useState, type FormEvent } from 'react'
-import { useSearchParams } from 'next/navigation'
 
 type Couple = { id: string; slug: string; groom_name: string; bride_name: string; status: 'active' | 'archived' }
 
 export function CoupleManager() {
-  const search = useSearchParams()
-  const selectedSlug = search.get('couple') || 'hai-hung-mi-mi'
+  const [selectedSlug, setSelectedSlug] = useState('hai-hung-mi-mi')
   const [couples, setCouples] = useState<Couple[]>([])
   const [groomName, setGroomName] = useState('')
   const [brideName, setBrideName] = useState('')
@@ -22,7 +20,10 @@ export function CoupleManager() {
     if (response.ok) setCouples(result.couples || [])
   }
 
-  useEffect(() => { void refresh() }, [])
+  useEffect(() => {
+    setSelectedSlug(new URLSearchParams(window.location.search).get('couple') || 'hai-hung-mi-mi')
+    void refresh()
+  }, [])
 
   const createCouple = async (event: FormEvent) => {
     event.preventDefault()
@@ -62,7 +63,7 @@ export function CoupleManager() {
         <div className="flex flex-wrap items-end gap-3">
           <label className="grid gap-1 text-sm font-medium">
             Đang chỉnh sửa thiệp
-            <select value={selectedSlug} onChange={e => window.location.assign(`/cau-hinh?couple=${encodeURIComponent(e.target.value)}`)} className="min-h-10 rounded-lg border border-stone-300 px-3 bg-white min-w-64">
+            <select value={selectedSlug} onChange={e => { setSelectedSlug(e.target.value); window.location.assign(`/cau-hinh?couple=${encodeURIComponent(e.target.value)}`) }} className="min-h-10 rounded-lg border border-stone-300 px-3 bg-white min-w-64">
               {couples.map(c => <option key={c.id} value={c.slug}>{c.groom_name} &amp; {c.bride_name}{c.status === 'archived' ? ' (Đã lưu trữ)' : ''}</option>)}
             </select>
           </label>
