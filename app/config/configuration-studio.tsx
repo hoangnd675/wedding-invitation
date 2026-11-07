@@ -91,7 +91,6 @@ export default function ConfigurationStudioPage() {
   const [newPhotoUrl, setNewPhotoUrl] = useState('')
   const [newPhotoCaption, setNewPhotoCaption] = useState('')
   const [newPhotoEffect, setNewPhotoEffect] = useState<PhotoScrollEffect>('fade-in')
-  const [showRsvpFilePreview, setShowRsvpFilePreview] = useState(false)
 
   const triggerSavedNotice = () => {
     setSavedNotice(true)
@@ -1062,6 +1061,16 @@ export default function ConfigurationStudioPage() {
                     </div>
                   ))}
                 </div>
+                <div className="flex justify-end pt-2">
+                  <button
+                    type="button"
+                    onClick={handleDownloadRsvpFile}
+                    disabled={data.rsvps.length === 0}
+                    className="min-h-[34px] px-3 py-1.5 rounded-lg bg-stone-900 text-white text-xs font-semibold inline-flex items-center gap-1.5 disabled:opacity-40 cursor-pointer"
+                  >
+                    <Download className="w-3.5 h-3.5" /> Tải danh sách
+                  </button>
+                </div>
               </div>
 
               <div className="bg-white rounded-2xl p-5 sm:p-6 border border-stone-200 shadow-2xs space-y-4">
@@ -1350,55 +1359,6 @@ export default function ConfigurationStudioPage() {
                     <h3 className="text-base font-bold">Danh sách khách xác nhận tham dự · {data.rsvps.length}</h3>
                     <p className="text-xs text-stone-500 mt-1">Dữ liệu được lấy trực tiếp từ Supabase.</p>
                   </div>
-                  <div className="flex flex-wrap gap-2">
-                    <button
-                      type="button"
-                      onClick={() => setShowRsvpFilePreview((value) => !value)}
-                      className="min-h-[38px] px-3 py-2 rounded-lg border border-stone-300 text-xs font-semibold inline-flex items-center gap-1.5 cursor-pointer"
-                    >
-                      <Eye className="w-4 h-4" /> {showRsvpFilePreview ? 'Ẩn bản xem' : 'Xem file xác nhận'}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleDownloadRsvpFile}
-                      disabled={data.rsvps.length === 0}
-                      className="min-h-[38px] px-3 py-2 rounded-lg bg-stone-900 text-white text-xs font-semibold inline-flex items-center gap-1.5 disabled:opacity-40 cursor-pointer"
-                    >
-                      <Download className="w-4 h-4" /> Tải file CSV
-                    </button>
-                  </div>
-                </div>
-                {showRsvpFilePreview && (
-                  <div className="overflow-x-auto rounded-xl border border-stone-200">
-                    <table className="w-full text-xs text-left">
-                      <thead className="bg-stone-100 text-stone-600">
-                        <tr>
-                          <th className="p-2.5">Họ tên</th>
-                          <th className="p-2.5">Xác nhận</th>
-                          <th className="p-2.5">Số người</th>
-                          <th className="p-2.5">Điện thoại</th>
-                          <th className="p-2.5">Phía khách</th>
-                          <th className="p-2.5">Thời gian</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-stone-100">
-                        {data.rsvps.map((r) => (
-                          <tr key={r.id}>
-                            <td className="p-2.5 font-semibold">{r.name}</td>
-                            <td className="p-2.5">{r.attending === 'yes' ? 'Tham dự' : 'Không tham dự'}</td>
-                            <td className="p-2.5">{r.attending === 'yes' ? r.guests : 0}</td>
-                            <td className="p-2.5">{r.phone || '--'}</td>
-                            <td className="p-2.5">{r.side === 'groom' ? 'Nhà trai' : 'Nhà gái'}</td>
-                            <td className="p-2.5 whitespace-nowrap">{r.createdAt || '--'}</td>
-                          </tr>
-                        ))}
-                        {data.rsvps.length === 0 && (
-                          <tr><td colSpan={6} className="p-4 text-center text-stone-500">Chưa có khách xác nhận.</td></tr>
-                        )}
-                      </tbody>
-                    </table>
-                  </div>
-                )}
                 <div className="divide-y divide-stone-200">
                   {data.rsvps.map((r) => (
                     <div key={r.id} className="py-3 flex items-center justify-between gap-4 text-sm">
