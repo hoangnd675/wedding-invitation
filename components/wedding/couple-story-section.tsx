@@ -181,7 +181,7 @@ export function CoupleStorySection({ data, theme, onOpenLightbox }: CoupleStoryS
               {data.groomFullName}
             </h3>
             {data.groomFamilyInfo && (
-              <p className="text-sm sm:text-base mt-2 max-w-xs leading-relaxed" style={{ color: colors.muted }}>
+              <p className="mt-2 w-full max-w-none whitespace-nowrap text-center leading-relaxed" style={{ color: colors.muted, fontSize: "clamp(0.75rem, 3.95vw, 1.1rem)" }}>
                 {data.groomFamilyInfo}
               </p>
             )}
@@ -258,7 +258,7 @@ export function CoupleStorySection({ data, theme, onOpenLightbox }: CoupleStoryS
               {data.brideFullName}
             </h3>
             {data.brideFamilyInfo && (
-              <p className="text-sm sm:text-base mt-2 max-w-xs leading-relaxed" style={{ color: colors.muted }}>
+              <p className="mt-2 w-full max-w-none whitespace-nowrap text-center leading-relaxed" style={{ color: colors.muted, fontSize: "clamp(0.75rem, 3.95vw, 1.1rem)" }}>
                 {data.brideFamilyInfo}
               </p>
             )}
