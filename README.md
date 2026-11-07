@@ -1,23 +1,37 @@
 # Thiệp cưới online
 
-Dự án thiệp cưới sử dụng Next.js 16, React 19 và TypeScript. Website được lưu mã nguồn trên GitHub và triển khai tự động bằng Vercel. Dự án **không sử dụng Supabase hoặc cơ sở dữ liệu bên ngoài**.
+Ứng dụng thiệp cưới xây dựng bằng Next.js 16, React 19 và TypeScript. Mã nguồn được quản lý trên GitHub và tự động triển khai qua Vercel. Supabase được dùng làm backend trực tuyến để đồng bộ cấu hình thiệp, RSVP, lời chúc và ảnh khách mời giữa các thiết bị.
 
 ## Các trang
 
-- `/`: Thiệp mời dành cho khách xem.
-- `/demo`: Trang xem thử các chủ đề, hiệu ứng và nhạc nền.
-- `/cau-hinh` (hoặc `/config`): Trang chỉnh sửa nội dung thiệp và xuất/nhập cấu hình JSON.
+- `/`: Thiệp mời dành cho khách.
+- `/demo`: Xem thử các chủ đề, hiệu ứng và nhạc nền.
+- `/cau-hinh`: Trang quản trị để chỉnh sửa nội dung và giao diện thiệp.
+- `/admin-login`: Đăng nhập quản trị.
+- `/config`: Đường dẫn tương thích, chuyển tiếp tới trang cấu hình.
 
-## Lưu trữ dữ liệu
+## Dữ liệu và đồng bộ
 
-- Cấu hình thiệp, lời chúc, RSVP và ảnh khách chia sẻ được lưu trong `localStorage` của trình duyệt.
-- Dữ liệu chỉ tồn tại trên trình duyệt và thiết bị đã tạo ra dữ liệu đó; không tự đồng bộ giữa các khách mời hoặc thiết bị khác nhau.
-- Xóa dữ liệu trình duyệt có thể làm mất dữ liệu đã lưu. Hãy xuất cấu hình JSON để sao lưu trước khi đổi thiết bị hoặc xóa dữ liệu trình duyệt.
-- GitHub lưu mã nguồn; Vercel lưu bản triển khai. Hai dịch vụ này không tự đóng vai trò cơ sở dữ liệu cho RSVP/lời chúc.
+- Cấu hình thiệp được lưu trên Supabase và tải lại khi mở website trên thiết bị khác.
+- RSVP, lời chúc và ảnh khách chia sẻ được lưu trực tuyến.
+- Trình duyệt vẫn dùng localStorage làm bản lưu cục bộ và hỗ trợ trải nghiệm khi khởi tạo.
+- Ảnh khách mời được lưu trong Supabase Storage, bucket `guest-photos`.
+
+## Biến môi trường
+
+Cấu hình các biến sau trong Vercel (và trong file môi trường local nếu chạy trên máy):
+
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `SUPABASE_ADMIN_API_SECRET`
+- `ADMIN_PASSWORD`
+- `ADMIN_SESSION_SECRET`
+
+Không đưa giá trị bí mật vào mã nguồn hoặc commit lên GitHub.
 
 ## Chạy dự án trên máy
 
-Yêu cầu Node.js và pnpm tương thích với `packageManager` trong `package.json`.
+Yêu cầu Node.js 22 và pnpm theo phiên bản khai báo trong `package.json`.
 
 ```bash
 pnpm install
@@ -29,46 +43,19 @@ Mở `http://localhost:3000`.
 ## Kiểm tra trước khi triển khai
 
 ```bash
-pnpm exec tsc --noEmit
+pnpm typecheck
 pnpm build
 ```
 
-Build không bỏ qua lỗi TypeScript. Hãy xử lý lỗi được báo trước khi triển khai.
+Vercel tự động tạo deployment khi có commit mới trên nhánh đã kết nối.
 
-## Đưa mã nguồn lên GitHub
+## Cấu trúc tài nguyên
 
-```bash
-git init
-git add .
-git commit -m "Clean and optimize wedding invitation"
-git branch -M main
-git remote add origin https://github.com/<tai-khoan>/<ten-repository>.git
-git push -u origin main
-```
+- `components/wedding/`: Các thành phần giao diện thiệp.
+- `lib/wedding-data.ts`: Dữ liệu mặc định, kiểu dữ liệu và danh sách chủ đề/nhạc.
+- `lib/wedding-store.ts`: Quản lý trạng thái và đồng bộ dữ liệu.
+- `app/api/`: API đăng nhập quản trị, cấu hình và RSVP.
+- `public/photos/`: Ảnh minh họa mặc định.
+- `public/music/`: Nhạc nền có trong ứng dụng.
 
-Nếu repository đã có remote và nhánh `main`, chỉ cần:
-
-```bash
-git add .
-git commit -m "Clean and optimize wedding invitation"
-git push origin main
-```
-
-## Triển khai trên Vercel
-
-1. Đăng nhập Vercel và chọn **Add New → Project**.
-2. Import repository GitHub.
-3. Giữ framework preset là **Next.js** và dùng lệnh build mặc định `next build`.
-4. Nhấn **Deploy**.
-5. Những lần push tiếp theo lên nhánh đã kết nối sẽ tự kích hoạt deployment mới.
-
-Không cần khai báo biến môi trường Supabase.
-
-## Tài nguyên ảnh và nhạc
-
-- Ảnh: `public/photos/`
-- Nhạc: `public/music/`
-- Dữ liệu mặc định và danh sách chủ đề: `lib/wedding-data.ts`
-- Quản lý trạng thái và lưu trình duyệt: `lib/wedding-store.ts`
-
-Không xóa hoặc đổi tên tài nguyên đang được tham chiếu trong `lib/wedding-data.ts` nếu chưa cập nhật các đường dẫn tương ứng.
+Không xóa hoặc đổi tên ảnh, nhạc đang được tham chiếu trong mã nguồn nếu chưa cập nhật các đường dẫn tương ứng.
