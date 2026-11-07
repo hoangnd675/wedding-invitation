@@ -188,14 +188,14 @@ export default function DemoShowcasePage() {
 
       <aside
         aria-label="Bảng dùng thử chủ đề và âm thanh"
-        className="fixed bottom-3 left-3 right-3 sm:left-1/2 sm:right-auto sm:-translate-x-1/2 sm:w-[min(94vw,760px)] z-[60] rounded-2xl bg-stone-950/92 text-white backdrop-blur-xl border border-white/15 shadow-[0_20px_50px_rgba(0,0,0,0.55)] overflow-hidden transition-all duration-300"
+        className="fixed bottom-[max(0.75rem,env(safe-area-inset-bottom))] left-2 right-2 sm:left-1/2 sm:right-auto sm:-translate-x-1/2 sm:w-[min(96vw,900px)] z-[60] max-h-[min(82dvh,780px)] overflow-y-auto overscroll-contain rounded-2xl bg-stone-950/95 text-white backdrop-blur-xl border border-white/15 shadow-[0_20px_50px_rgba(0,0,0,0.55)] transition-all duration-300"
       >
 
         {/* Phần Top Bar */}
-        <div className="px-3.5 py-2.5 flex items-center justify-between gap-3 border-b border-white/10">
+        <div className="sticky top-0 z-10 bg-stone-950/95 backdrop-blur-xl px-3 py-2.5 sm:px-4 flex flex-wrap items-center justify-between gap-2 border-b border-white/10">
 
           {/* Cố định chiều rộng để tránh nhảy layout khi tên chủ đề thay đổi */}
-          <div className="flex items-center gap-2 w-[140px] sm:w-[160px] shrink-0">
+          <div className="flex items-center gap-2 min-w-0 flex-1 sm:flex-none sm:w-[180px] shrink-0">
             <span
               className="w-3.5 h-3.5 rounded-full shrink-0 border border-white/40"
               style={{
@@ -210,7 +210,7 @@ export default function DemoShowcasePage() {
             </span>
           </div>
 
-          <div className="flex items-center gap-1.5 flex-1">
+          <div className="flex items-center gap-1.5 w-full sm:w-auto sm:flex-1">
 
             {/* Nút mở thiệp */}
             <button
@@ -253,13 +253,13 @@ export default function DemoShowcasePage() {
           <div className="p-3 sm:p-4 space-y-3">
 
             {/* Các tab */}
-            <div className="flex items-center gap-1.5 bg-white/5 p-1 rounded-xl">
+            <div className="flex items-center gap-1.5 bg-white/5 p-1 rounded-xl overflow-x-auto overscroll-x-contain">
 
               {/* Tab chủ đề */}
               <button
                 type="button"
                 onClick={() => setActiveTab('themes')}
-                className={`flex-1 py-1.5 px-3 rounded-lg text-xs font-semibold inline-flex items-center justify-center gap-1.5 cursor-pointer transition-colors ${
+                className={`flex-1 min-w-max py-2 px-2.5 sm:px-3 rounded-lg text-xs font-semibold inline-flex items-center justify-center gap-1.5 cursor-pointer transition-colors ${
                   activeTab === 'themes'
                     ? 'bg-white text-stone-950 shadow-xs'
                     : 'text-white/75 hover:text-white'
@@ -315,7 +315,7 @@ export default function DemoShowcasePage() {
 
             {/* TAB CHỦ ĐỀ */}
             {activeTab === 'themes' && (
-              <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-2 max-h-[210px] overflow-y-auto pr-1">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-7 gap-2 max-h-[min(34dvh,300px)] overflow-y-auto overscroll-contain pr-1">
 
                 {WEDDING_THEMES.map((t) => {
                   const active = t.id === demoTheme
@@ -374,7 +374,7 @@ export default function DemoShowcasePage() {
 
             {/* TAB HIỆU ỨNG */}
             {activeTab === 'effects' && (
-              <div className="flex flex-wrap gap-1.5 max-h-[180px] overflow-y-auto">
+              <div className="flex flex-wrap gap-1.5 max-h-[min(30dvh,260px)] overflow-y-auto overscroll-contain">
 
                 {PARTICLE_OPTIONS.map((opt) => {
                   const active = demoParticle === opt.id
@@ -400,7 +400,7 @@ export default function DemoShowcasePage() {
 
             {/* TAB PHÔNG CHỮ - CHỈ THAY ĐỔI BẢN DEMO */}
             {activeTab === 'fonts' && (
-              <div className="max-h-[260px] overflow-y-auto pr-1">
+              <div className="max-h-[min(38dvh,340px)] overflow-y-auto overscroll-contain pr-1">
                 <FontStylePicker
                   variant="dark"
                   selected={demoFontPreset}
@@ -412,7 +412,7 @@ export default function DemoShowcasePage() {
 
             {/* TAB NHẠC NỀN */}
             {activeTab === 'music' && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-[190px] overflow-y-auto">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-[min(32dvh,280px)] overflow-y-auto overscroll-contain">
 
                 {MUSIC_TRACKS.map((track) => {
                   const active = demoMusic === track.src
