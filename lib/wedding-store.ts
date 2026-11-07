@@ -145,19 +145,24 @@ export function useWeddingStore() {
 
   const updateData = useCallback(
     (updater: Partial<WeddingInvitationData> | ((prev: WeddingInvitationData) => WeddingInvitationData), syncRemote = true) => {
-      setData((prev) => {
-        const next = typeof updater === 'function' ? updater(prev) : { ...prev, ...updater }
-        saveWeddingData(next)
-        if (syncRemote) {
-          if (configSaveTimer) clearTimeout(configSaveTimer)
-          configSaveTimer = setTimeout(() => {
-            if (hasSupabaseConfig()) saveRemoteConfig(next).catch((error) => console.error('Lưu cấu hình trực tuyến thất bại:', error))
-          }, 900)
-        }
-        return next
-      })
+      // Resolve the next value outside React's state updater so Strict Mode cannot
+      // duplicate persistence side effects or leave a stale debounced write.
+      const next = typeof updater === 'function' ? updater(data) : { ...data, ...updater }
+      setData(next)
+      saveWeddingData(next)
+      if (syncRemote) {
+        if (configSaveTimer) clearTimeout(configSaveTimer)
+        configSaveTimer = setTimeout(() => {
+          if (hasSupabaseConfig()) {
+            void saveRemoteConfig(next).catch((error) => {
+              console.error('Lưu cấu hình trực tuyến thất bại:', error)
+              window.dispatchEvent(new CustomEvent('wedding-config-save-error'))
+            })
+          }
+        }, 300)
+      }
     },
-    []
+    [data]
   )
 
   // Hàm chuyên dụng để cập nhật nhanh riêng themeId từ phần config
