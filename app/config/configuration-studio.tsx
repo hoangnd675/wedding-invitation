@@ -206,9 +206,12 @@ export default function ConfigurationStudioPage() {
         r.createdAt || '',
       ]),
     ]
-    const csv = '\uFEFF' + rows.map((row) =>
-      row.map((value) => '"' + String(value ?? '').replace(/"/g, '""') + '"').join(',')
-    ).join('\r\n')
+    const csvCell = (value: unknown) => {
+      const raw = String(value ?? '')
+      const safe = /^[\\s]*[=+@-]/.test(raw) ? `'${raw}` : raw
+      return '"' + safe.replace(/"/g, '""') + '"'
+    }
+    const csv = '\uFEFF' + rows.map((row) => row.map(csvCell).join(',')).join('\r\n')
     const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }))
     const link = document.createElement('a')
     link.href = url
@@ -216,11 +219,11 @@ export default function ConfigurationStudioPage() {
     document.body.appendChild(link)
     link.click()
     link.remove()
-    URL.revokeObjectURL(url)
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000)
   }
 
   const safeDownloadName = (value: string) =>
-    value.normalize('NFD').replace(/[\\u0300-\\u036f]/g, '')
+    value.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
       .replace(/[^a-zA-Z0-9_-]+/g, '-').replace(/^-+|-+$/g, '') || 'khach-moi'
 
   const handleDownloadGuestPhoto = async (photo: (typeof data.sharedPhotos)[number]) => {
