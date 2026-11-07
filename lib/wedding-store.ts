@@ -209,25 +209,43 @@ export function useWeddingStore() {
   const addSharedPhoto = useCallback(async (photo: Omit<SharedGuestPhoto, 'id' | 'createdAt'>) => {
     if (!hasSupabaseConfig()) throw new Error('Thiệp cưới chưa kết nối Supabase nên chưa thể nhận ảnh.')
     if (!coupleId) throw new Error('Chưa xác định được thiệp cưới để lưu ảnh. Vui lòng tải lại trang.')
+
     const guestName = photo.guestName.trim()
-    if (!guestName || guestName.length > 80) throw new Error('Vui lòng nhập tên người gửi (tối đa 80 ký tự).')
-    if (!photo.src.startsWith('data:image/')) throw new Error('Ảnh gửi lên không hợp lệ. Vui lòng chọn lại ảnh.')
-    const newPhoto: SharedGuestPhoto = { ...photo, guestName, id: 'sp-' + Date.now(), createdAt: 'Vừa xong' }
+    if (!guestName || guestName.length > 80) {
+      throw new Error('Vui lòng nhập tên người gửi (tối đa 80 ký tự).')
+    }
+    if (!photo.src.startsWith('data:image/')) {
+      throw new Error('Ảnh gửi lên không hợp lệ. Vui lòng chọn lại ảnh.')
+    }
+
     const blob = await (await fetch(photo.src)).blob()
-      if (!['image/jpeg', 'image/png', 'image/webp'].includes(blob.type) || blob.size > 5 * 1024 * 1024) {
-        throw new Error('Ảnh phải là JPG, PNG hoặc WebP và tối đa 5 MB.')
-      }
-      const ext = blob.type === 'image/png' ? 'png' : blob.type === 'image/webp' ? 'webp' : 'jpg'
-      const path = `${coupleId}/guest/${Date.now()}-${crypto.randomUUID()}.${ext}`
-      const upload = await fetch(supabaseStorageUrl(`guest-photos/${path}`), {
-        method: 'POST', headers: supabaseHeaders({ 'Content-Type': blob.type, 'x-upsert': 'false' }), body: blob,
-      })
-      if (!upload.ok) throw new Error('Không tải được ảnh lên kho lưu trữ.')
-      newPhoto.src = supabasePublicStorageUrl(`guest-photos/${path}`)
-      await insertRemoteRow('guest_photos', {
-        couple_id: coupleId, guest_name: guestName,
-        caption: photo.caption.slice(0, 300), image_url: newPhoto.src,
-      })
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(blob.type) || blob.size > 5 * 1024 * 1024) {
+      throw new Error('Ảnh phải là JPG, PNG hoặc WebP và tối đa 5 MB.')
+    }
+
+    const ext = blob.type === 'image/png' ? 'png' : blob.type === 'image/webp' ? 'webp' : 'jpg'
+    const path = `${coupleId}/guest/${Date.now()}-${crypto.randomUUID()}.${ext}`
+    const upload = await fetch(supabaseStorageUrl(`guest-photos/${path}`), {
+      method: 'POST',
+      headers: supabaseHeaders({ 'Content-Type': blob.type, 'x-upsert': 'false' }),
+      body: blob,
+    })
+    if (!upload.ok) throw new Error('Không tải được ảnh lên kho lưu trữ.')
+
+    const imageUrl = supabasePublicStorageUrl(`guest-photos/${path}`)
+    await insertRemoteRow('guest_photos', {
+      couple_id: coupleId,
+      guest_name: guestName,
+      caption: photo.caption.slice(0, 300),
+      image_url: imageUrl,
+    })
+
+    const newPhoto: SharedGuestPhoto = {
+      ...photo,
+      guestName,
+      src: imageUrl,
+      id: 'sp-' + Date.now(),
+      createdAt: 'Vừa xong',
     }
     updateData(prev => ({ ...prev, sharedPhotos: [newPhoto, ...prev.sharedPhotos] }), false)
     return newPhoto
