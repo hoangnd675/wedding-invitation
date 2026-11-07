@@ -13,7 +13,6 @@ import { SectionHeader } from './couple-story-section'
 import { ScrollReveal } from './scroll-reveal'
 import { ThemeEmblem } from './theme-emblem'
 import {
-  Camera,
   Check,
   Copy,
   Download,
