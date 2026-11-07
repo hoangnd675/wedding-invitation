@@ -573,7 +573,7 @@ export function RsvpWishesShareGiftSection({
               Bạn có ảnh đẹp của chúng mình?
             </h2>
             <p className="max-w-lg mx-auto text-sm sm:text-base mb-6" style={{ color: colors.muted }}>
-              Gửi tặng cô dâu chú rể những khoảnh khắc bạn đã chụp — không cần cài ứng dụng, không cần đăng nhập.
+              Gửi tặng cô dâu chú rể những khoảnh khắc bạn đã chụp nhé 🥰
             </p>
             <button
               type="button"
