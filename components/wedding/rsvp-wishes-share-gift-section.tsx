@@ -26,7 +26,7 @@ import {
 interface RsvpWishesShareGiftProps {
   data: WeddingInvitationData
   theme: ThemeConfig
-  onAddRsvp: (rsvp: Omit<RsvpSubmission, 'id' | 'createdAt'>) => void
+  onAddRsvp: (rsvp: Omit<RsvpSubmission, 'id' | 'createdAt'>) => void | Promise<unknown>
   onAddWish: (wish: Omit<WeddingWish, 'id' | 'createdAt'>) => void
   onAddSharedPhoto: (photo: Omit<SharedGuestPhoto, 'id' | 'createdAt'>) => void | Promise<unknown>
   onOpenLightbox?: (src: string, caption?: string) => void
@@ -58,6 +58,8 @@ export function RsvpWishesShareGiftSection({
   const [rsvpSide, setRsvpSide] = useState<'groom' | 'bride'>('groom')
   const [rsvpMessage, setRsvpMessage] = useState('')
   const [rsvpSubmitted, setRsvpSubmitted] = useState(false)
+  const [rsvpSubmitting, setRsvpSubmitting] = useState(false)
+  const [rsvpError, setRsvpError] = useState('')
 
   // 2. Wishes Form State
   const [wishName, setWishName] = useState('')
@@ -77,18 +79,27 @@ export function RsvpWishesShareGiftSection({
   // 4. Copy Bank Account State
   const [copiedAccount, setCopiedAccount] = useState<string | null>(null)
 
-  const handleRsvpSubmit = (e: React.FormEvent) => {
+  const handleRsvpSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!rsvpName.trim()) return
-    onAddRsvp({
-      name: rsvpName.trim(),
-      attending: rsvpAttend,
-      guests: rsvpAttend === 'yes' ? Number(rsvpGuests) || 1 : 0,
-      phone: rsvpPhone.trim(),
-      side: rsvpSide,
-      message: rsvpMessage.trim(),
-    })
-    setRsvpSubmitted(true)
+    if (!rsvpName.trim() || rsvpSubmitting) return
+
+    setRsvpSubmitting(true)
+    setRsvpError('')
+    try {
+      await onAddRsvp({
+        name: rsvpName.trim(),
+        attending: rsvpAttend,
+        guests: rsvpAttend === 'yes' ? Number(rsvpGuests) || 1 : 0,
+        phone: rsvpPhone.trim(),
+        side: rsvpSide,
+        message: rsvpMessage.trim(),
+      })
+      setRsvpSubmitted(true)
+    } catch (error) {
+      setRsvpError(error instanceof Error ? error.message : 'Không thể lưu xác nhận. Vui lòng thử lại.')
+    } finally {
+      setRsvpSubmitting(false)
+    }
   }
 
   const handleWishSubmit = (e: React.FormEvent) => {
@@ -369,9 +380,16 @@ export function RsvpWishesShareGiftSection({
                 />
               </div>
 
+              {rsvpError && (
+                <p role="alert" className="rounded-xl border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-700">
+                  {rsvpError}
+                </p>
+              )}
+
               <button
                 type="submit"
-                className="w-full min-h-[50px] rounded-full text-base font-semibold inline-flex items-center justify-center gap-2 transition-transform hover:scale-[1.01] active:scale-[0.99] cursor-pointer shadow-md"
+                disabled={rsvpSubmitting}
+                className="w-full min-h-[50px] rounded-full text-base font-semibold inline-flex items-center justify-center gap-2 transition-transform hover:scale-[1.01] active:scale-[0.99] cursor-pointer shadow-md disabled:opacity-60 disabled:cursor-not-allowed"
                 style={{
                   backgroundColor: colors.accentInk,
                   color: theme.isDark ? '#111a3a' : '#fff',
@@ -379,7 +397,7 @@ export function RsvpWishesShareGiftSection({
                 }}
               >
                 <Send className="w-4 h-4" />
-                Gửi xác nhận
+                {rsvpSubmitting ? 'Đang lưu xác nhận...' : 'Gửi xác nhận'}
               </button>
             </form>
           )}
