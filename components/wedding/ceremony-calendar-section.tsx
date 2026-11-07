@@ -53,6 +53,7 @@ export function CeremonyCalendarSection({
   onOpenLightbox,
 }: CeremonyCalendarSectionProps) {
   const { colors, fonts } = theme
+  const hasWeddingDate = /^\\d{4}-\\d{2}-\\d{2}$/.test(data.weddingDate)
   const [openMapIds, setOpenMapIds] = useState<Record<string, boolean>>({})
 
   // Live Countdown State
@@ -60,6 +61,7 @@ export function CeremonyCalendarSection({
 
   useEffect(() => {
     const compute = () => {
+      if (!hasWeddingDate) { setCountdown({ days: 0, hours: 0, mins: 0, secs: 0 }); return }
       const targetStr = `${data.weddingDate}T${data.weddingTime || '11:00'}:00`
       const targetTime = new Date(targetStr).getTime()
       const now = Date.now()
@@ -73,14 +75,15 @@ export function CeremonyCalendarSection({
     compute()
     const timer = setInterval(compute, 1000)
     return () => clearInterval(timer)
-  }, [data.weddingDate, data.weddingTime])
+  }, [data.weddingDate, data.weddingTime, hasWeddingDate])
 
   // Build Monthly Calendar Cells for `data.weddingDate`
   const calendarInfo = useMemo(() => {
-    const parts = data.weddingDate.split('-').map(Number)
-    const year = parts[0] || 2026
-    const month = parts[1] || 12 // 1-12
-    const weddingDay = parts[2] || 20
+    const parts = hasWeddingDate ? data.weddingDate.split('-').map(Number) : []
+    const today = new Date()
+    const year = parts[0] || today.getFullYear()
+    const month = parts[1] || today.getMonth() + 1
+    const weddingDay = parts[2] || 0
 
     const firstDayDate = new Date(year, month - 1, 1)
     // Monday-based index (0 = Mon, 6 = Sun)
@@ -92,7 +95,7 @@ export function CeremonyCalendarSection({
     for (let d = 1; d <= daysInMonth; d++) cells.push(d)
 
     return { year, month, weddingDay, cells }
-  }, [data.weddingDate])
+  }, [data.weddingDate, hasWeddingDate])
 
   const toggleMap = (id: string) => {
     setOpenMapIds((prev) => ({ ...prev, [id]: !prev[id] }))
@@ -175,7 +178,7 @@ export function CeremonyCalendarSection({
                 className="text-xs sm:text-sm font-semibold uppercase tracking-widest text-right pr-3"
                 style={{ fontFamily: fonts.ui, color: colors.muted }}
               >
-                Tháng {calendarInfo.month}
+                {hasWeddingDate ? `Tháng ${calendarInfo.month}` : 'Ngày cưới'}
               </span>
               <b
                 className="text-4xl sm:text-5xl font-bold leading-none border-x px-4"
@@ -185,22 +188,20 @@ export function CeremonyCalendarSection({
                   borderColor: colors.line,
                 }}
               >
-                {calendarInfo.weddingDay}
+                {hasWeddingDate ? calendarInfo.weddingDay : '—'}
               </b>
               <span
                 className="text-xs sm:text-sm font-semibold uppercase tracking-widest text-left pl-3"
                 style={{ fontFamily: fonts.ui, color: colors.muted }}
               >
-                Năm {calendarInfo.year}
+                {hasWeddingDate ? `Năm ${calendarInfo.year}` : 'Chưa cập nhật'}
               </span>
             </div>
 
             <p className="text-sm sm:text-base font-medium" style={{ color: colors.ink }}>
-              Chủ nhật · Lúc {data.weddingTime} · {data.weddingDateDisplay}
+              {hasWeddingDate ? `Lúc ${data.weddingTime} · ${data.weddingDateDisplay}` : 'Ngày cưới sẽ được cập nhật sau'}
             </p>
-            <p className="text-xs sm:text-sm italic mt-1" style={{ color: colors.muted }}>
-              {data.lunarDateText}
-            </p>
+            {data.lunarDateText && <p className="text-xs sm:text-sm italic mt-1" style={{ color: colors.muted }}>{data.lunarDateText}</p>}
 
             {/* Monthly Wedding Calendar */}
             <div
@@ -214,7 +215,7 @@ export function CeremonyCalendarSection({
                 className="text-xs sm:text-sm font-bold uppercase tracking-[0.22em] mb-3"
                 style={{ color: colors.accentInk, fontFamily: fonts.ui }}
               >
-                Tháng {calendarInfo.month} · {calendarInfo.year}
+                {hasWeddingDate ? `Tháng ${calendarInfo.month} · ${calendarInfo.year}` : 'Lịch cưới sẽ được cập nhật'}
               </p>
               <div className="grid grid-cols-7 gap-1 text-center text-xs">
                 {['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'].map((dow) => (
