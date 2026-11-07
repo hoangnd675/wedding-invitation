@@ -291,7 +291,7 @@ export default function ConfigurationStudioPage() {
               className="min-h-[42px] flex-1 sm:flex-none justify-center px-3 sm:px-3.5 py-1.5 rounded-xl border border-stone-300 bg-white hover:bg-stone-50 text-xs sm:text-sm font-semibold inline-flex items-center gap-1.5 cursor-pointer"
             >
               <Sparkles className="w-4 h-4 text-amber-600" />
-              {showLivePreview ? 'Ẩn khung xem thử' : 'Bật xem thử trực tiếp'}
+              {showLivePreview ? 'Ẩn khung xem thử' : 'Xem thử'}
             </button>
 
             <Link
