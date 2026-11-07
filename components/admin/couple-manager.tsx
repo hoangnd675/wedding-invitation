@@ -1,12 +1,11 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 
 type Couple = { id: string; slug: string; groom_name: string; bride_name: string; status: 'active' | 'archived' }
 
 export function CoupleManager() {
-  const router = useRouter()
   const search = useSearchParams()
   const selectedSlug = search.get('couple') || 'hai-hung-mi-mi'
   const [couples, setCouples] = useState<Couple[]>([])
@@ -18,7 +17,7 @@ export function CoupleManager() {
 
   const refresh = async () => {
     const response = await fetch('/api/couples', { cache: 'no-store' })
-    if (response.status === 401) { router.replace('/admin-login'); return }
+    if (response.status === 401) { window.location.replace('/admin-login'); return }
     const result = await response.json()
     if (response.ok) setCouples(result.couples || [])
   }
@@ -38,7 +37,7 @@ export function CoupleManager() {
       setGroomName(''); setBrideName('')
       await refresh()
       setNotice(`Đã tạo thiệp: ${window.location.origin}${result.url}`)
-      router.push(`/cau-hinh?couple=${encodeURIComponent(result.couple.slug)}`)
+      window.location.assign(`/cau-hinh?couple=${encodeURIComponent(result.couple.slug)}`)
     } catch (e) { setError(e instanceof Error ? e.message : 'Có lỗi xảy ra.') }
     finally { setCreating(false) }
   }
@@ -63,7 +62,7 @@ export function CoupleManager() {
         <div className="flex flex-wrap items-end gap-3">
           <label className="grid gap-1 text-sm font-medium">
             Đang chỉnh sửa thiệp
-            <select value={selectedSlug} onChange={e => router.push(`/cau-hinh?couple=${encodeURIComponent(e.target.value)}`)} className="min-h-10 rounded-lg border border-stone-300 px-3 bg-white min-w-64">
+            <select value={selectedSlug} onChange={e => window.location.assign(`/cau-hinh?couple=${encodeURIComponent(e.target.value)}`)} className="min-h-10 rounded-lg border border-stone-300 px-3 bg-white min-w-64">
               {couples.map(c => <option key={c.id} value={c.slug}>{c.groom_name} &amp; {c.bride_name}{c.status === 'archived' ? ' (Đã lưu trữ)' : ''}</option>)}
             </select>
           </label>
