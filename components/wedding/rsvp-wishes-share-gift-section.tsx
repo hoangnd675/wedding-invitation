@@ -116,16 +116,36 @@ export function RsvpWishesShareGiftSection({
   }
 
   const handleGuestFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
+    const input = e.currentTarget
+    const file = input.files?.[0]
     if (!file) return
+
     setShareError('')
-    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) { setShareError('Chỉ hỗ trợ ảnh JPG, PNG hoặc WebP.'); return }
-    if (file.size > 5 * 1024 * 1024) { setShareError('Ảnh phải có dung lượng tối đa 5 MB.'); return }
+    setGuestPhotoPreview('')
+
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+      setShareError('Ảnh cần có định dạng JPG, PNG hoặc WebP. Vui lòng chọn lại ảnh.')
+      input.value = ''
+      return
+    }
+    if (file.size <= 0 || file.size > 5 * 1024 * 1024) {
+      setShareError('Ảnh phải có dung lượng từ 1 byte đến tối đa 5 MB.')
+      input.value = ''
+      return
+    }
+
     const reader = new FileReader()
     reader.onload = () => {
-      if (typeof reader.result === 'string') {
+      if (typeof reader.result === 'string' && reader.result.startsWith('data:image/')) {
         setGuestPhotoPreview(reader.result)
+      } else {
+        setShareError('Không thể đọc ảnh này. Vui lòng chọn một ảnh khác.')
       }
+      input.value = ''
+    }
+    reader.onerror = () => {
+      setShareError('Không thể đọc ảnh từ thiết bị. Vui lòng thử lại.')
+      input.value = ''
     }
     reader.readAsDataURL(file)
   }
@@ -688,7 +708,7 @@ export function RsvpWishesShareGiftSection({
                     )}
                     <input
                       type="file"
-                      accept="image/*"
+                      accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp"
                       onChange={handleGuestFileChange}
                       className="hidden"
                     />
