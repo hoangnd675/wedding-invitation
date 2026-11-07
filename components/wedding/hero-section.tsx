@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { ThemeConfig, WeddingInvitationData } from '@/lib/wedding-data'
-import { DoubleHappinessGlyph } from './falling-effects'
+import { ThemeEmblem } from './theme-emblem'
 import { ScrollReveal, ParallaxBox } from './scroll-reveal'
 
 interface HeroSectionProps {
@@ -132,7 +132,7 @@ export function HeroSection({ data, theme, onOpenLightbox }: HeroSectionProps) {
 
         <ScrollReveal effect="zoom-in" className="relative z-10 mb-5">
           <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto text-[#e2b865] drop-shadow-[0_0_18px_rgba(226,184,101,0.45)]">
-            <DoubleHappinessGlyph className="w-full h-full" color="#e2b865" />
+            <ThemeEmblem theme={theme} className="w-full h-full" />
           </div>
         </ScrollReveal>
 
@@ -553,7 +553,7 @@ export function HeroSection({ data, theme, onOpenLightbox }: HeroSectionProps) {
               backgroundColor: `${colors.soft}88`,
             }}
           >
-            <DoubleHappinessGlyph className="w-6 h-6" color={colors.accent} />
+            <ThemeEmblem theme={theme} className="w-6 h-6" />
           </div>
 
           <p
