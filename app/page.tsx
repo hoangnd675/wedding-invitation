@@ -5,7 +5,23 @@ import { WeddingInvitationView } from '@/components/wedding/wedding-invitation-v
 
 /** Trang thiệp mời dành cho khách xem. */
 export default function GuestWeddingPage() {
-  const { data, addRsvp, addWish, addSharedPhoto } = useWeddingStore()
+  const { data, hydrated, addRsvp, addWish, addSharedPhoto } = useWeddingStore()
+
+  // Keep the default theme out of the first paint while the saved theme is loading.
+  if (!hydrated) {
+    return (
+      <main
+        aria-busy="true"
+        className="min-h-screen grid place-items-center"
+        style={{ backgroundColor: '#f8f5f0', color: '#6b6258' }}
+      >
+        <div className="text-center px-6">
+          <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-2 border-current border-t-transparent" />
+          <p className="text-sm tracking-wide">Đang tải thiệp cưới...</p>
+        </div>
+      </main>
+    )
+  }
 
   return (
     <WeddingInvitationView
