@@ -3,9 +3,8 @@ import type { Metadata, Viewport } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Wedding invitation',
-  description: 'Created by hoangnd675',
-  generator: 'hoangnd675',
+  title: 'Thiệp cưới online',
+  description: 'Thiệp mời cưới trực tuyến.',
   icons: {
     icon: [
       {
@@ -39,7 +38,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
+    <html lang="vi">
       <body className="antialiased">
         {children}
         {process.env.NODE_ENV === 'production' && <Analytics />}
