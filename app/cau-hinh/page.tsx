@@ -69,6 +69,7 @@ export default function ConfigurationStudioPage() {
   const {
     data,
     hydrated,
+    loadError,
     updateData,
     setThemeId, // Đã bổ sung hàm setThemeId để đồng bộ chủ đề
     addRsvp,
@@ -199,6 +200,12 @@ export default function ConfigurationStudioPage() {
         </div>
       </main>
     )
+  }
+
+  if (loadError) {
+    return <main className="min-h-screen grid place-items-center p-6 text-center text-stone-700">
+      <div><h1 className="text-xl font-semibold">Không tải được thiệp</h1><p className="mt-2 text-sm">{loadError}</p><Link href="/cau-hinh" className="mt-4 inline-flex rounded-lg bg-rose-800 px-4 py-2 text-white">Quay lại thiệp mặc định</Link></div>
+    </main>
   }
 
   return (
