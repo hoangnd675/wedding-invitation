@@ -265,10 +265,10 @@ export default function ConfigurationStudioPage() {
 
   return (
     <div className="min-h-screen bg-stone-100 text-stone-900">
-      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-stone-200 px-4 py-3">
-        <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
+      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-stone-200 px-3 sm:px-5 py-2.5">
+        <div className="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-2.5">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-red-800 text-amber-200 flex items-center justify-center shadow-xs shrink-0">
+            <div className="w-9 h-9 rounded-xl bg-red-800 text-amber-200 flex items-center justify-center shadow-xs shrink-0">
               <Heart className="w-5 h-5 fill-amber-200 text-amber-200" />
             </div>
             <div>
@@ -278,7 +278,7 @@ export default function ConfigurationStudioPage() {
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-wrap items-center gap-1.5">
             {savedNotice && (
               <span className="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-semibold inline-flex items-center gap-1">
                 <Check className="w-3.5 h-3.5" /> Đã lưu thay đổi
@@ -309,9 +309,9 @@ export default function ConfigurationStudioPage() {
 
       <CoupleManager />
 
-      <div className="max-w-7xl mx-auto p-4 sm:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <div className={showLivePreview ? 'lg:col-span-6 space-y-6' : 'lg:col-span-12 space-y-6'}>
-          <div className="flex flex-wrap gap-2 bg-white p-2 rounded-2xl border border-stone-200 shadow-2xs">
+      <div className="max-w-6xl mx-auto px-3 py-4 sm:px-5 sm:py-6">
+        <div className="min-w-0 space-y-5">
+          <nav aria-label="Các mục cấu hình" className="flex flex-nowrap gap-2 overflow-x-auto overscroll-x-contain bg-white p-2 rounded-2xl border border-stone-200 shadow-2xs">
             {[
               { id: 'theme-music', label: '1. Chủ đề & Nhạc nền', icon: Palette },
               { id: 'couple-date', label: '2. Cô dâu Chú rể & Ngày cưới', icon: Heart },
@@ -334,7 +334,7 @@ export default function ConfigurationStudioPage() {
                   }`}
                 >
                   <Icon className="w-4 h-4" />
-                  <span>{tab.label}</span>
+                  <span className="whitespace-nowrap">{tab.label.replace(/^\d+\.\s*/, '')}</span>
                 </button>
               )
             })}
@@ -342,7 +342,7 @@ export default function ConfigurationStudioPage() {
 
           {activeTab === 'theme-music' && (
             <div className="space-y-6">
-              <div className="bg-white rounded-2xl p-5 sm:p-6 border border-stone-200 shadow-2xs">
+              <div className="bg-white rounded-2xl p-4 sm:p-5 border border-stone-200 shadow-2xs">
                 <h2 className="text-lg font-bold mb-1 flex items-center gap-2">
                   <Palette className="w-5 h-5 text-red-700" />
                   Chọn Chủ đề Thiệp cưới
