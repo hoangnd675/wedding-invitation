@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'File nhạc phải có dung lượng từ 1 byte đến 15 MB.' }, { status: 413 })
     }
 
-    const contentType = file.type.startsWith('audio/') ? file.type : MIME_BY_EXTENSION[extension]
+    const contentType = MIME_BY_EXTENSION[extension]
     const path = `uploads/${Date.now()}-${randomUUID()}.${extension}`
     const upload = await fetch(`${url}/storage/v1/object/wedding-music/${path}`, {
       method: 'POST',
