@@ -14,6 +14,7 @@ import {
 } from '@/lib/wedding-data'
 import { useWeddingStore } from '@/lib/wedding-store'
 import { WeddingInvitationView } from '@/components/wedding/wedding-invitation-view'
+import { FontStylePicker } from '@/components/wedding/font-style-picker'
 import { CoupleManager } from '@/components/admin/couple-manager'
 import {
   ArrowDown,
@@ -346,6 +347,24 @@ export default function ConfigurationStudioPage() {
                     )
                   })}
                 </div>
+              </div>
+
+              <div className="bg-white rounded-2xl p-5 sm:p-6 border border-stone-200 shadow-2xs">
+                <h2 className="text-lg font-bold mb-1 flex items-center gap-2">
+                  <Sparkles className="w-5 h-5 text-amber-600" />
+                  Phông chữ nghệ thuật
+                </h2>
+                <p className="text-xs sm:text-sm text-stone-500 mb-4">
+                  Chọn bộ phông cho toàn bộ thiệp. Thay đổi sẽ được lưu vào cấu hình chính và đồng bộ với khách xem.
+                </p>
+                <FontStylePicker
+                  selected={data.fontPreset || 'theme'}
+                  fallbackFonts={WEDDING_THEMES.find((theme) => theme.id === data.themeId)?.fonts || WEDDING_THEMES[0].fonts}
+                  onChange={(fontPreset) => {
+                    updateData({ fontPreset })
+                    triggerSavedNotice()
+                  }}
+                />
               </div>
 
               <div className="bg-white rounded-2xl p-5 sm:p-6 border border-stone-200 shadow-2xs">
