@@ -67,6 +67,7 @@ type ConfigTab =
 export default function ConfigurationStudioPage() {
   const {
     data,
+    hydrated,
     updateData,
     setThemeId, // Đã bổ sung hàm setThemeId để đồng bộ chủ đề
     addRsvp,
@@ -161,6 +162,17 @@ export default function ConfigurationStudioPage() {
     a.click()
     document.body.removeChild(a)
     URL.revokeObjectURL(url)
+  }
+
+  if (!hydrated) {
+    return (
+      <main className="min-h-screen grid place-items-center bg-stone-100 text-stone-600" aria-busy="true">
+        <div className="text-center px-6">
+          <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-2 border-current border-t-transparent" />
+          <p className="text-sm">Đang tải cấu hình mới nhất từ máy chủ...</p>
+        </div>
+      </main>
+    )
   }
 
   return (
