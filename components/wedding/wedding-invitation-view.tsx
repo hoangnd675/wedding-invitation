@@ -26,7 +26,7 @@ interface WeddingInvitationViewProps {
   musicOverride?: string
   initialCoverOpen?: boolean
   onCoverOpenChange?: (open: boolean) => void
-  onAddRsvp: (rsvp: Omit<RsvpSubmission, 'id' | 'createdAt'>) => void
+  onAddRsvp: (rsvp: Omit<RsvpSubmission, 'id' | 'createdAt'>) => void | Promise<unknown>
   onAddWish: (wish: Omit<WeddingWish, 'id' | 'createdAt'>) => void
   onAddSharedPhoto: (photo: Omit<SharedGuestPhoto, 'id' | 'createdAt'>) => void
 }
