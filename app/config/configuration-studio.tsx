@@ -570,8 +570,7 @@ export default function ConfigurationStudioPage() {
 
           {activeTab === 'couple-date' && (
             <div className="bg-white rounded-2xl p-3.5 sm:p-5 lg:p-6 border border-stone-200 shadow-2xs space-y-4 sm:space-y-5 lg:space-y-6">
-              <h2 className="text-lg font-bold flex items-center gap-2">
-                <Heart className="w-5 h-5 text-red-700" />
+              <h2 className="text-lg font-bold">
                 Thông tin Cô dâu, Chú rể &amp; Ngày giờ cưới
               </h2>
 
