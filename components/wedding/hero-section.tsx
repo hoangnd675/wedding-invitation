@@ -60,12 +60,12 @@ export function BotanicalBranchSvg({
   )
 }
 
-function LanternSvg({ className }: { className?: string }) {
+function LanternSvg({ className, gold, red }: { className?: string; gold: string; red: string }) {
   return (
     <svg viewBox="0 0 60 120" className={className} aria-hidden="true">
-      <path d="M30 0V16" stroke="#e6c071" strokeWidth="1.5" />
-      <rect x="19" y="15" width="22" height="7" rx="1.5" fill="#e6c071" />
-      <ellipse cx="30" cy="54" rx="25" ry="32" fill="#c8261c" />
+      <path d="M30 0V16" stroke={gold} strokeWidth="1.5" />
+      <rect x="19" y="15" width="22" height="7" rx="1.5" fill={gold} />
+      <ellipse cx="30" cy="54" rx="25" ry="32" fill={red} />
       <ellipse cx="30" cy="54" rx="12" ry="32" fill="none" stroke="#e6c071" strokeWidth="1.3" opacity=".8" />
       <path d="M30 22V86M6 54H54" stroke="#e6c071" strokeWidth="1.1" opacity=".55" />
       <ellipse cx="22" cy="44" rx="6" ry="12" fill="#fff" opacity=".14" />
@@ -75,9 +75,9 @@ function LanternSvg({ className }: { className?: string }) {
   )
 }
 
-function FretworkCornerSvg({ className }: { className?: string }) {
+function FretworkCornerSvg({ className, color }: { className?: string; color: string }) {
   return (
-    <svg viewBox="0 0 60 60" className={className} aria-hidden="true">
+    <svg viewBox="0 0 60 60" className={className} style={{ color }} aria-hidden="true">
       <path
         d="M2 58V2H58M10 50V10H50M18 42V18H36V36H26V26"
         fill="none"
@@ -98,8 +98,8 @@ export function HeroSection({ data, theme, onOpenLightbox }: HeroSectionProps) {
         id="top"
         className="relative min-h-[100svh] pt-24 pb-16 px-4 flex flex-col items-center justify-center text-center overflow-hidden"
         style={{
-          background: 'radial-gradient(ellipse 75% 60% at 50% 38%, #c62c22 0%, #a51f17 55%, #7a130d 100%)',
-          color: '#f7e3b5',
+          background: `radial-gradient(ellipse 75% 60% at 50% 38%, ${colors.accent} 0%, ${colors.accentInk} 55%, ${colors.navBg} 100%)`,
+          color: colors.navInk,
         }}
       >
         {/* Ambient Moving Light Orbs */}
@@ -107,31 +107,32 @@ export function HeroSection({ data, theme, onOpenLightbox }: HeroSectionProps) {
           aria-hidden="true"
           className="wd-ambient-orb absolute top-1/4 left-1/2 -translate-x-1/2 w-[380px] h-[380px] rounded-full pointer-events-none"
           style={{
-            background: 'radial-gradient(circle, rgba(226,184,101,0.28) 0%, transparent 70%)',
+            background: `radial-gradient(circle, ${colors.gold}48 0%, transparent 70%)`,
           }}
         />
 
         {/* Gold Double Frame Border */}
         <div
           aria-hidden="true"
-          className="absolute inset-x-3 top-[72px] bottom-3 sm:inset-x-6 sm:top-[82px] sm:bottom-6 border border-[#e2b865]/70 pointer-events-none"
+          className="absolute inset-x-3 top-[72px] bottom-3 sm:inset-x-6 sm:top-[82px] sm:bottom-6 border pointer-events-none"
           style={{
-            boxShadow: 'inset 0 0 0 5px transparent, inset 0 0 0 6px rgba(226,184,101,0.32)',
+            borderColor: `${colors.gold}b3`,
+            boxShadow: `inset 0 0 0 5px transparent, inset 0 0 0 6px ${colors.gold}52`,
           }}
         />
 
         {/* 4 Traditional Fretwork Corners */}
-        <FretworkCornerSvg className="absolute top-[80px] left-5 sm:top-[92px] sm:left-8 w-10 h-10 sm:w-14 sm:h-14 text-[#e2b865]" />
-        <FretworkCornerSvg className="absolute top-[80px] right-5 sm:top-[92px] sm:right-8 w-10 h-10 sm:w-14 sm:h-14 text-[#e2b865] -scale-x-100" />
-        <FretworkCornerSvg className="absolute bottom-5 left-5 sm:bottom-8 sm:left-8 w-10 h-10 sm:w-14 sm:h-14 text-[#e2b865] -scale-y-100" />
-        <FretworkCornerSvg className="absolute bottom-5 right-5 sm:bottom-8 sm:right-8 w-10 h-10 sm:w-14 sm:h-14 text-[#e2b865] -scale-100" />
+        <FretworkCornerSvg color={colors.gold} className="absolute top-[80px] left-5 sm:top-[92px] sm:left-8 w-10 h-10 sm:w-14 sm:h-14" />
+        <FretworkCornerSvg color={colors.gold} className="absolute top-[80px] right-5 sm:top-[92px] sm:right-8 w-10 h-10 sm:w-14 sm:h-14 -scale-x-100" />
+        <FretworkCornerSvg color={colors.gold} className="absolute bottom-5 left-5 sm:bottom-8 sm:left-8 w-10 h-10 sm:w-14 sm:h-14 -scale-y-100" />
+        <FretworkCornerSvg color={colors.gold} className="absolute bottom-5 right-5 sm:bottom-8 sm:right-8 w-10 h-10 sm:w-14 sm:h-14 -scale-100" />
 
         {/* 2 Swaying Red & Gold Lanterns */}
-        <LanternSvg className="wd-sway-slow absolute top-14 left-[6%] sm:left-[10%] w-11 h-22 sm:w-16 sm:h-32 drop-shadow-[0_8px_16px_rgba(50,0,0,0.5)]" />
-        <LanternSvg className="wd-sway-reverse absolute top-14 right-[6%] sm:right-[10%] w-11 h-22 sm:w-16 sm:h-32 drop-shadow-[0_8px_16px_rgba(50,0,0,0.5)]" />
+        <LanternSvg gold={colors.gold} red={colors.accent} className="wd-sway-slow absolute top-14 left-[6%] sm:left-[10%] w-11 h-22 sm:w-16 sm:h-32 drop-shadow-[0_8px_16px_rgba(50,0,0,0.5)]" />
+        <LanternSvg gold={colors.gold} red={colors.accent} className="wd-sway-reverse absolute top-14 right-[6%] sm:right-[10%] w-11 h-22 sm:w-16 sm:h-32 drop-shadow-[0_8px_16px_rgba(50,0,0,0.5)]" />
 
         <ScrollReveal effect="zoom-in" className="relative z-10 mb-5">
-          <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto text-[#e2b865] drop-shadow-[0_0_18px_rgba(226,184,101,0.45)]">
+          <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto drop-shadow-[0_0_18px_rgba(226,184,101,0.45)]">
             <ThemeEmblem theme={theme} className="w-full h-full" />
           </div>
         </ScrollReveal>
@@ -141,11 +142,13 @@ export function HeroSection({ data, theme, onOpenLightbox }: HeroSectionProps) {
           <div className="relative w-[min(290px,70vw)] aspect-square mx-auto">
             <div
               aria-hidden="true"
-              className="absolute -inset-4 rounded-full border border-dashed border-[#e2b865]/65 animate-[spin_60s_linear_infinite]"
+              className="absolute -inset-4 rounded-full border border-dashed animate-[spin_60s_linear_infinite]"
+              style={{ borderColor: `${colors.gold}a6` }}
             />
             <div
               onClick={() => onOpenLightbox?.(data.heroMainPhoto, `${data.groomShortName} & ${data.brideShortName}`)}
-              className="w-full h-full rounded-full overflow-hidden border-[3px] border-[#e2b865] shadow-[0_0_0_7px_rgba(122,19,13,0.6),0_22px_44px_rgba(40,0,0,0.5)] cursor-pointer group"
+              className="w-full h-full rounded-full overflow-hidden border-[3px] shadow-[0_0_0_7px_rgba(122,19,13,0.6),0_22px_44px_rgba(40,0,0,0.5)] cursor-pointer group"
+              style={{ borderColor: colors.gold }}
             >
               <ParallaxBox speed={0.08} className="w-full h-full">
                 <img
@@ -161,8 +164,8 @@ export function HeroSection({ data, theme, onOpenLightbox }: HeroSectionProps) {
         {/* Save Card Text */}
         <ScrollReveal effect="glow-rise" delay={120} className="relative z-10 mt-8 max-w-xl mx-auto px-4">
           <p
-            className="uppercase tracking-[0.28em] text-xs sm:text-sm text-[#f7dca0] mb-3"
-            style={{ fontFamily: fonts.ui }}
+            className="uppercase tracking-[0.28em] text-xs sm:text-sm mb-3"
+            style={{ fontFamily: fonts.ui, color: colors.navInk }}
           >
             {data.heroEyebrow}
           </p>
@@ -171,13 +174,13 @@ export function HeroSection({ data, theme, onOpenLightbox }: HeroSectionProps) {
             style={{ fontFamily: fonts.name }}
           >
             <span className="wd-gold-shimmer-text">{data.groomShortName}</span>
-            <span className="text-2xl sm:text-4xl text-[#f7e3b5] italic font-serif">&amp;</span>
+            <span className="text-2xl sm:text-4xl italic font-serif" style={{ color: colors.navInk }}>&amp;</span>
             <span className="wd-gold-shimmer-text">{data.brideShortName}</span>
           </h1>
-          <p className="text-lg sm:text-xl text-[#fff3d6] mt-3 font-medium" style={{ fontFamily: fonts.head }}>
+          <p className="text-lg sm:text-xl mt-3 font-medium" style={{ fontFamily: fonts.head, color: colors.navInk }}>
             Chủ nhật, {data.weddingDateDisplay} · {data.weddingTime}
           </p>
-          <p className="text-sm sm:text-base text-[#f3d08c] italic mt-1">{data.lunarDateText}</p>
+          <p className="text-sm sm:text-base italic mt-1" style={{ color: colors.gold }}>{data.lunarDateText}</p>
         </ScrollReveal>
       </section>
     )
@@ -254,7 +257,7 @@ export function HeroSection({ data, theme, onOpenLightbox }: HeroSectionProps) {
         className="relative min-h-[100svh] pt-24 pb-16 px-4 flex flex-col items-center justify-center text-center overflow-hidden"
         style={{
           background:
-            'radial-gradient(ellipse 90% 55% at 50% 110%, #2d3d80 0%, transparent 65%), radial-gradient(ellipse at 50% 0%, #17224b 0%, #0a1128 72%)',
+            `radial-gradient(ellipse 90% 55% at 50% 110%, ${colors.accent2}55 0%, transparent 65%), radial-gradient(ellipse at 50% 0%, ${colors.soft} 0%, ${colors.navBg} 72%)`,
           color: colors.ink,
         }}
       >
@@ -266,7 +269,8 @@ export function HeroSection({ data, theme, onOpenLightbox }: HeroSectionProps) {
         <svg
           viewBox="0 0 100 100"
           aria-hidden="true"
-          className="wd-sway-slow absolute top-24 right-[8%] w-16 h-16 sm:w-20 sm:h-20 text-[#f3dfaa] drop-shadow-[0_0_24px_rgba(243,223,170,0.65)]"
+          className="wd-sway-slow absolute top-24 right-[8%] w-16 h-16 sm:w-20 sm:h-20"
+          style={{ color: colors.gold, filter: `drop-shadow(0 0 24px ${colors.gold}a6)` }}
         >
           <path d="M62 6A44 44 0 1 0 94 72A36 36 0 1 1 62 6Z" fill="currentColor" />
         </svg>
@@ -275,13 +279,15 @@ export function HeroSection({ data, theme, onOpenLightbox }: HeroSectionProps) {
           <div className="relative w-[min(280px,68vw)] aspect-square mx-auto">
             <div
               aria-hidden="true"
-              className="absolute -inset-4 rounded-full border border-[#d8b56a]/45 animate-[spin_50s_linear_infinite]"
+              className="absolute -inset-4 rounded-full border animate-[spin_50s_linear_infinite]"
+              style={{ borderColor: `${colors.gold}73` }}
             >
-              <span className="absolute -top-1.5 left-1/2 w-3 h-3 rounded-full bg-[#d8b56a] shadow-[0_0_12px_#d8b56a]" />
+              <span className="absolute -top-1.5 left-1/2 w-3 h-3 rounded-full" style={{ backgroundColor: colors.gold, boxShadow: `0 0 12px ${colors.gold}` }} />
             </div>
             <div
               onClick={() => onOpenLightbox?.(data.heroMainPhoto, `${data.groomShortName} & ${data.brideShortName}`)}
-              className="w-full h-full rounded-full overflow-hidden border-2 border-[#d8b56a] shadow-[0_0_45px_rgba(216,181,106,0.3)] cursor-pointer group"
+              className="w-full h-full rounded-full overflow-hidden border-2 cursor-pointer group"
+              style={{ borderColor: colors.gold, boxShadow: `0 0 45px ${colors.gold}4d` }}
             >
               <ParallaxBox speed={0.08} className="w-full h-full">
                 <img
@@ -295,7 +301,7 @@ export function HeroSection({ data, theme, onOpenLightbox }: HeroSectionProps) {
         </ScrollReveal>
 
         <ScrollReveal effect="glow-rise" delay={140} className="relative z-10 mt-8 max-w-xl mx-auto">
-          <p className="uppercase tracking-[0.3em] text-xs sm:text-sm text-[#bcbad0] mb-3" style={{ fontFamily: fonts.ui }}>
+          <p className="uppercase tracking-[0.3em] text-xs sm:text-sm mb-3" style={{ fontFamily: fonts.ui, color: colors.muted }}>
             {data.heroEyebrow}
           </p>
           <h1
@@ -303,13 +309,13 @@ export function HeroSection({ data, theme, onOpenLightbox }: HeroSectionProps) {
             style={{ fontFamily: fonts.name, color: colors.gold }}
           >
             <span className="wd-gold-shimmer-text">{data.groomShortName}</span>
-            <span className="text-3xl sm:text-4xl text-[#f3ecdc] italic font-serif">&amp;</span>
+            <span className="text-3xl sm:text-4xl italic font-serif" style={{ color: colors.ink }}>&amp;</span>
             <span className="wd-gold-shimmer-text">{data.brideShortName}</span>
           </h1>
-          <p className="text-lg sm:text-xl text-[#f3ecdc] mt-3 tracking-widest" style={{ fontFamily: fonts.head }}>
+          <p className="text-lg sm:text-xl mt-3 tracking-widest" style={{ fontFamily: fonts.head, color: colors.ink }}>
             {data.weddingDateDisplay} · {data.weddingTime}
           </p>
-          <p className="text-sm sm:text-base text-[#bcbad0] italic mt-1">{data.lunarDateText}</p>
+          <p className="text-sm sm:text-base italic mt-1" style={{ color: colors.muted }}>{data.lunarDateText}</p>
         </ScrollReveal>
       </section>
     )
