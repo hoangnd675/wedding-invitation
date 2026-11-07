@@ -66,11 +66,11 @@ function LanternSvg({ className, gold, red }: { className?: string; gold: string
       <path d="M30 0V16" stroke={gold} strokeWidth="1.5" />
       <rect x="19" y="15" width="22" height="7" rx="1.5" fill={gold} />
       <ellipse cx="30" cy="54" rx="25" ry="32" fill={red} />
-      <ellipse cx="30" cy="54" rx="12" ry="32" fill="none" stroke="#e6c071" strokeWidth="1.3" opacity=".8" />
-      <path d="M30 22V86M6 54H54" stroke="#e6c071" strokeWidth="1.1" opacity=".55" />
+      <ellipse cx="30" cy="54" rx="12" ry="32" fill="none" stroke={gold} strokeWidth="1.3" opacity=".8" />
+      <path d="M30 22V86M6 54H54" stroke={gold} strokeWidth="1.1" opacity=".55" />
       <ellipse cx="22" cy="44" rx="6" ry="12" fill="#fff" opacity=".14" />
-      <rect x="19" y="85" width="22" height="7" rx="1.5" fill="#e6c071" />
-      <path d="M30 92V118M25 93V112M35 93V112" stroke="#e6c071" strokeWidth="1.6" strokeLinecap="round" />
+      <rect x="19" y="85" width="22" height="7" rx="1.5" fill={gold} />
+      <path d="M30 92V118M25 93V112M35 93V112" stroke={gold} strokeWidth="1.6" strokeLinecap="round" />
     </svg>
   )
 }
