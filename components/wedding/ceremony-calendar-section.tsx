@@ -5,6 +5,7 @@ import { ThemeConfig, VenueEvent, WeddingInvitationData } from '@/lib/wedding-da
 import { SectionHeader } from './couple-story-section'
 import { ScrollReveal, ParallaxBox } from './scroll-reveal'
 import { Calendar, MapPin, Navigation, Clock } from 'lucide-react'
+import { getVietnameseLunarDateText } from '@/lib/vietnamese-lunar'
 
 interface CeremonyCalendarSectionProps {
   data: WeddingInvitationData
@@ -53,7 +54,8 @@ export function CeremonyCalendarSection({
   onOpenLightbox,
 }: CeremonyCalendarSectionProps) {
   const { colors, fonts } = theme
-  const hasWeddingDate = /^\\d{4}-\\d{2}-\\d{2}$/.test(data.weddingDate)
+  const hasWeddingDate = /^\d{4}-\d{2}-\d{2}$/.test(data.weddingDate)
+  const lunarDateText = getVietnameseLunarDateText(data.weddingDate)
   const [openMapIds, setOpenMapIds] = useState<Record<string, boolean>>({})
 
   // Live Countdown State
@@ -201,7 +203,7 @@ export function CeremonyCalendarSection({
             <p className="text-sm sm:text-base font-medium" style={{ color: colors.ink }}>
               {hasWeddingDate ? `Lúc ${data.weddingTime} · ${data.weddingDateDisplay}` : 'Ngày cưới sẽ được cập nhật sau'}
             </p>
-            {data.lunarDateText && <p className="text-xs sm:text-sm italic mt-1" style={{ color: colors.muted }}>{data.lunarDateText}</p>}
+            {lunarDateText && <p className="text-xs sm:text-sm italic mt-1" style={{ color: colors.muted }}>{lunarDateText}</p>}
 
             {/* Monthly Wedding Calendar */}
             <div
