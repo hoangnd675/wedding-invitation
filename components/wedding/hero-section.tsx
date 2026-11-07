@@ -4,6 +4,7 @@ import React from 'react'
 import { ThemeConfig, WeddingInvitationData } from '@/lib/wedding-data'
 import { ThemeEmblem } from './theme-emblem'
 import { ScrollReveal, ParallaxBox } from './scroll-reveal'
+import { getVietnameseLunarDateText } from '@/lib/vietnamese-lunar'
 
 interface HeroSectionProps {
   data: WeddingInvitationData
@@ -90,6 +91,7 @@ function FretworkCornerSvg({ className, color }: { className?: string; color: st
 
 export function HeroSection({ data, theme, onOpenLightbox }: HeroSectionProps) {
   const { colors, fonts, heroStyle } = theme
+  const lunarDateText = getVietnameseLunarDateText(data.weddingDate)
 
   // 1. SONG HỶ — Red velvet & gold traditional hero with lanterns, fretwork corners, circular moon-gate photo
   if (heroStyle === 'songhy-lantern') {
@@ -180,7 +182,7 @@ export function HeroSection({ data, theme, onOpenLightbox }: HeroSectionProps) {
           <p className="text-lg sm:text-xl mt-3 font-medium" style={{ fontFamily: fonts.head, color: colors.navInk }}>
             Chủ nhật, {data.weddingDateDisplay} · {data.weddingTime}
           </p>
-          <p className="text-sm sm:text-base italic mt-1" style={{ color: colors.gold }}>{data.lunarDateText}</p>
+          <p className="text-sm sm:text-base italic mt-1" style={{ color: colors.gold }}>{lunarDateText}</p>
         </ScrollReveal>
       </section>
     )
