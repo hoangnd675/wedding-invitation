@@ -401,9 +401,6 @@ export default function DemoShowcasePage() {
             {/* TAB PHÔNG CHỮ - CHỈ THAY ĐỔI BẢN DEMO */}
             {activeTab === 'fonts' && (
               <div className="max-h-[260px] overflow-y-auto pr-1">
-                <p className="mb-3 text-xs text-white/65">
-                  Chọn thử kiểu chữ. Lựa chọn này chỉ tồn tại trong phiên demo, không lưu vào thiệp chính.
-                </p>
                 <FontStylePicker
                   variant="dark"
                   selected={demoFontPreset}
