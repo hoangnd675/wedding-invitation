@@ -266,7 +266,7 @@ export default function ConfigurationStudioPage() {
   return (
     <div className="min-h-screen bg-stone-100 text-stone-900">
       <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-stone-200 px-3 sm:px-5 py-2.5">
-        <div className="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-2.5">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl bg-red-800 text-amber-200 flex items-center justify-center shadow-xs shrink-0">
               <Heart className="w-5 h-5 fill-amber-200 text-amber-200" />
@@ -278,7 +278,7 @@ export default function ConfigurationStudioPage() {
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-1.5">
+          <div className="flex w-full sm:w-auto flex-wrap items-center gap-1.5">
             {savedNotice && (
               <span className="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-semibold inline-flex items-center gap-1">
                 <Check className="w-3.5 h-3.5" /> Đã lưu thay đổi
@@ -288,7 +288,7 @@ export default function ConfigurationStudioPage() {
             <button
               type="button"
               onClick={() => setShowLivePreview((prev) => !prev)}
-              className="min-h-[40px] px-3.5 py-1.5 rounded-xl border border-stone-300 bg-white hover:bg-stone-50 text-xs sm:text-sm font-semibold inline-flex items-center gap-1.5 cursor-pointer"
+              className="min-h-[42px] flex-1 sm:flex-none justify-center px-3 sm:px-3.5 py-1.5 rounded-xl border border-stone-300 bg-white hover:bg-stone-50 text-xs sm:text-sm font-semibold inline-flex items-center gap-1.5 cursor-pointer"
             >
               <Sparkles className="w-4 h-4 text-amber-600" />
               {showLivePreview ? 'Ẩn khung xem thử' : 'Bật xem thử trực tiếp'}
@@ -298,7 +298,7 @@ export default function ConfigurationStudioPage() {
               href="/"
               target="_blank"
               rel="noopener noreferrer"
-              className="min-h-[40px] px-4 py-1.5 rounded-xl bg-red-800 hover:bg-red-700 text-white text-xs sm:text-sm font-semibold inline-flex items-center gap-1.5 shadow-xs"
+              className="min-h-[42px] flex-1 sm:flex-none justify-center px-3 sm:px-4 py-1.5 rounded-xl bg-red-800 hover:bg-red-700 text-white text-xs sm:text-sm font-semibold inline-flex items-center gap-1.5 shadow-xs"
             >
               <Eye className="w-4 h-4" />
               Mở Trang Khách Xem
@@ -309,9 +309,9 @@ export default function ConfigurationStudioPage() {
 
       <CoupleManager />
 
-      <div className="max-w-6xl mx-auto px-3 py-4 sm:px-5 sm:py-6">
-        <div className="min-w-0 space-y-5">
-          <nav aria-label="Các mục cấu hình" className="flex flex-nowrap gap-2 overflow-x-auto overscroll-x-contain bg-white p-2 rounded-2xl border border-stone-200 shadow-2xs">
+      <div className="max-w-7xl mx-auto w-full px-3 py-3 sm:px-5 sm:py-5 lg:px-7 lg:py-6">
+        <div className="min-w-0 space-y-3 sm:space-y-4 lg:space-y-5">
+          <nav aria-label="Các mục cấu hình" className="sticky top-[104px] sm:top-[76px] z-30 flex flex-nowrap gap-1.5 sm:gap-2 overflow-x-auto overscroll-x-contain bg-white/95 backdrop-blur-md p-1.5 sm:p-2 rounded-xl sm:rounded-2xl border border-stone-200 shadow-sm">
             {[
               { id: 'theme-music', label: '1. Chủ đề & Nhạc nền', icon: Palette },
               { id: 'couple-date', label: '2. Cô dâu Chú rể & Ngày cưới', icon: Heart },
@@ -327,7 +327,7 @@ export default function ConfigurationStudioPage() {
                   key={tab.id}
                   type="button"
                   onClick={() => setActiveTab(tab.id as ConfigTab)}
-                  className={`min-h-[42px] shrink-0 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold inline-flex items-center gap-2 cursor-pointer transition-all ${
+                  className={`min-h-[42px] shrink-0 px-3 sm:px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold inline-flex items-center gap-2 cursor-pointer transition-all ${
                     active
                       ? 'bg-red-800 text-white shadow-xs'
                       : 'text-stone-700 hover:bg-stone-100'
@@ -341,7 +341,7 @@ export default function ConfigurationStudioPage() {
           </nav>
 
           {activeTab === 'theme-music' && (
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-5 lg:space-y-6">
               <div className="bg-white rounded-2xl p-4 sm:p-5 border border-stone-200 shadow-2xs">
                 <h2 className="text-lg font-bold mb-1 flex items-center gap-2">
                   <Palette className="w-5 h-5 text-red-700" />
@@ -402,7 +402,7 @@ export default function ConfigurationStudioPage() {
                 </div>
               </div>
 
-              <div className="bg-white rounded-2xl p-5 sm:p-6 border border-stone-200 shadow-2xs">
+              <div className="bg-white rounded-2xl p-3.5 sm:p-5 lg:p-6 border border-stone-200 shadow-2xs">
                 <h2 className="text-lg font-bold mb-1 flex items-center gap-2">
                   <Sparkles className="w-5 h-5 text-amber-600" />
                   Phông chữ nghệ thuật
@@ -453,7 +453,7 @@ export default function ConfigurationStudioPage() {
                 </div>
               </div>
 
-              <div className="bg-white rounded-2xl p-5 sm:p-6 border border-stone-200 shadow-2xs space-y-4">
+              <div className="bg-white rounded-2xl p-3.5 sm:p-5 lg:p-6 border border-stone-200 shadow-2xs space-y-3 sm:space-y-4">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div>
                     <h2 className="text-lg font-bold flex items-center gap-2">
@@ -550,7 +550,7 @@ export default function ConfigurationStudioPage() {
           )}
 
           {activeTab === 'couple-date' && (
-            <div className="bg-white rounded-2xl p-5 sm:p-6 border border-stone-200 shadow-2xs space-y-6">
+            <div className="bg-white rounded-2xl p-3.5 sm:p-5 lg:p-6 border border-stone-200 shadow-2xs space-y-4 sm:space-y-5 lg:space-y-6">
               <h2 className="text-lg font-bold flex items-center gap-2">
                 <Heart className="w-5 h-5 text-red-700" />
                 Thông tin Cô dâu, Chú rể &amp; Ngày giờ cưới
