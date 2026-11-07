@@ -2,7 +2,7 @@ import { createHmac, timingSafeEqual } from 'node:crypto'
 import { cookies } from 'next/headers'
 
 export const ADMIN_COOKIE_NAME = 'wedding_admin_session'
-export const ADMIN_SESSION_SECONDS = 60 * 60 * 8
+export const ADMIN_SESSION_SECONDS = 60 * 30
 
 function sign(value: string) {
   const secret = process.env.ADMIN_SESSION_SECRET
