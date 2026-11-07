@@ -1357,6 +1357,7 @@ export default function ConfigurationStudioPage() {
                     <h3 className="text-base font-bold">Danh sách khách xác nhận tham dự · {data.rsvps.length}</h3>
                     <p className="text-xs text-stone-500 mt-1">Dữ liệu được lấy trực tiếp từ Supabase.</p>
                   </div>
+                </div>
                 <div className="divide-y divide-stone-200">
                   {data.rsvps.map((r) => (
                     <div key={r.id} className="py-3 flex items-center justify-between gap-4 text-sm">
