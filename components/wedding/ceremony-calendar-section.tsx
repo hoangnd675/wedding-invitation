@@ -296,7 +296,7 @@ export function CeremonyCalendarSection({
             </div>}
 
             {/* Action Buttons */}
-            {hasWeddingDate && <div className="flex flex-wrap items-center justify-center gap-3 mt-2">
+            {hasWeddingDate && <div className="flex justify-center mt-4">
               <button
                 type="button"
                 onClick={() =>
@@ -307,7 +307,7 @@ export function CeremonyCalendarSection({
                     endIso: data.venues[0]?.icsEnd || '20261220T080000Z',
                   })
                 }
-                className="min-h-[46px] px-6 py-2.5 rounded-full text-sm font-semibold inline-flex items-center gap-2 transition-transform hover:scale-105 cursor-pointer"
+                className="min-h-[46px] min-w-[190px] justify-center px-6 py-2.5 rounded-full text-sm font-semibold inline-flex items-center gap-2 transition-transform hover:scale-105 cursor-pointer"
                 style={{
                   backgroundColor: colors.accentInk,
                   color: theme.isDark ? '#111a3a' : '#fff',
@@ -317,18 +317,6 @@ export function CeremonyCalendarSection({
                 <Calendar className="w-4 h-4" />
                 Thêm vào lịch
               </button>
-              <a
-                href="#location"
-                className="min-h-[46px] px-6 py-2.5 rounded-full text-sm font-semibold inline-flex items-center gap-2 border transition-colors"
-                style={{
-                  borderColor: colors.accent,
-                  color: colors.accentInk,
-                  fontFamily: fonts.ui,
-                }}
-              >
-                <MapPin className="w-4 h-4" />
-                Xem địa điểm
-              </a>
             </div>}
           </ScrollReveal>
         </div>
