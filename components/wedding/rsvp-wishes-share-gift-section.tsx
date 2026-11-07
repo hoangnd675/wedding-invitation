@@ -133,11 +133,15 @@ export function RsvpWishesShareGiftSection({
   const handleSharePhotoSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!guestPhotoPreview || isUploadingPhoto) return
+    if (!guestPhotoName.trim()) {
+      setShareError('Vui lòng nhập tên người gửi ảnh.')
+      return
+    }
     setIsUploadingPhoto(true)
     setShareError('')
     try {
       await onAddSharedPhoto({
-        guestName: guestPhotoName.trim() || 'Khách mời thân thiết',
+        guestName: guestPhotoName.trim(),
         caption: guestPhotoCaption.trim() || 'Khoảnh khắc đẹp trong ngày vui!',
         src: guestPhotoPreview,
       })
@@ -693,10 +697,12 @@ export function RsvpWishesShareGiftSection({
 
                 <div>
                   <label className="block text-sm font-semibold mb-1" style={{ fontFamily: fonts.ui }}>
-                    Tên của bạn
+                    Tên của bạn <span style={{ color: colors.accent }}>*</span>
                   </label>
                   <input
                     type="text"
+                    required
+                    maxLength={80}
                     value={guestPhotoName}
                     onChange={(e) => setGuestPhotoName(e.target.value)}
                     placeholder="Nhập tên của bạn..."
@@ -737,7 +743,7 @@ export function RsvpWishesShareGiftSection({
 
                 <button
                   type="submit"
-                  disabled={!guestPhotoPreview || isUploadingPhoto}
+                  disabled={!guestPhotoPreview || !guestPhotoName.trim() || isUploadingPhoto}
                   className="w-full min-h-[46px] rounded-full text-sm font-semibold transition-opacity disabled:opacity-45 cursor-pointer"
                   style={{
                     backgroundColor: colors.accentInk,
