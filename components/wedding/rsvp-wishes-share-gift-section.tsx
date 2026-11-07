@@ -28,7 +28,7 @@ interface RsvpWishesShareGiftProps {
   theme: ThemeConfig
   onAddRsvp: (rsvp: Omit<RsvpSubmission, 'id' | 'createdAt'>) => void
   onAddWish: (wish: Omit<WeddingWish, 'id' | 'createdAt'>) => void
-  onAddSharedPhoto: (photo: Omit<SharedGuestPhoto, 'id' | 'createdAt'>) => void
+  onAddSharedPhoto: (photo: Omit<SharedGuestPhoto, 'id' | 'createdAt'>) => void | Promise<unknown>
   onOpenLightbox?: (src: string, caption?: string) => void
 }
 
@@ -71,6 +71,8 @@ export function RsvpWishesShareGiftSection({
   const [guestPhotoCaption, setGuestPhotoCaption] = useState('')
   const [guestPhotoPreview, setGuestPhotoPreview] = useState<string>('')
   const [shareSuccess, setShareSuccess] = useState(false)
+  const [shareError, setShareError] = useState('')
+  const [isUploadingPhoto, setIsUploadingPhoto] = useState(false)
 
   // 4. Copy Bank Account State
   const [copiedAccount, setCopiedAccount] = useState<string | null>(null)
@@ -105,6 +107,9 @@ export function RsvpWishesShareGiftSection({
   const handleGuestFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
+    setShareError('')
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) { setShareError('Chỉ hỗ trợ ảnh JPG, PNG hoặc WebP.'); return }
+    if (file.size > 5 * 1024 * 1024) { setShareError('Ảnh phải có dung lượng tối đa 5 MB.'); return }
     const reader = new FileReader()
     reader.onload = () => {
       if (typeof reader.result === 'string') {
@@ -114,22 +119,27 @@ export function RsvpWishesShareGiftSection({
     reader.readAsDataURL(file)
   }
 
-  const handleSharePhotoSubmit = (e: React.FormEvent) => {
+  const handleSharePhotoSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!guestPhotoPreview) return
-    onAddSharedPhoto({
-      guestName: guestPhotoName.trim() || 'Khách mời thân thiết',
-      caption: guestPhotoCaption.trim() || 'Khoảnh khắc đẹp trong ngày vui!',
-      src: guestPhotoPreview,
-    })
-    setGuestPhotoName('')
-    setGuestPhotoCaption('')
-    setGuestPhotoPreview('')
-    setShareSuccess(true)
-    setTimeout(() => {
-      setShareSuccess(false)
-      setShowShareModal(false)
-    }, 1500)
+    if (!guestPhotoPreview || isUploadingPhoto) return
+    setIsUploadingPhoto(true)
+    setShareError('')
+    try {
+      await onAddSharedPhoto({
+        guestName: guestPhotoName.trim() || 'Khách mời thân thiết',
+        caption: guestPhotoCaption.trim() || 'Khoảnh khắc đẹp trong ngày vui!',
+        src: guestPhotoPreview,
+      })
+      setGuestPhotoName('')
+      setGuestPhotoCaption('')
+      setGuestPhotoPreview('')
+      setShareSuccess(true)
+      setTimeout(() => { setShareSuccess(false); setShowShareModal(false) }, 1500)
+    } catch (error) {
+      setShareError(error instanceof Error ? error.message : 'Không thể tải ảnh lên. Vui lòng thử lại.')
+    } finally {
+      setIsUploadingPhoto(false)
+    }
   }
 
   const handleCopyAccount = async (num: string) => {
@@ -702,6 +712,8 @@ export function RsvpWishesShareGiftSection({
                   />
                 </div>
 
+                {shareError && <p role="alert" className="text-sm font-semibold text-red-700">{shareError}</p>}
+
                 {shareSuccess && (
                   <p className="text-sm font-semibold" style={{ color: colors.accentInk }}>
                     ✓ Đã chia sẻ ảnh thành công!
@@ -710,7 +722,7 @@ export function RsvpWishesShareGiftSection({
 
                 <button
                   type="submit"
-                  disabled={!guestPhotoPreview}
+                  disabled={!guestPhotoPreview || isUploadingPhoto}
                   className="w-full min-h-[46px] rounded-full text-sm font-semibold transition-opacity disabled:opacity-45 cursor-pointer"
                   style={{
                     backgroundColor: colors.accentInk,
@@ -718,7 +730,7 @@ export function RsvpWishesShareGiftSection({
                     fontFamily: fonts.ui,
                   }}
                 >
-                  Gửi tặng ảnh
+                  {isUploadingPhoto ? 'Đang tải ảnh lên...' : 'Gửi tặng ảnh'}
                 </button>
               </form>
             </div>
