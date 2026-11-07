@@ -360,7 +360,7 @@ export default function ConfigurationStudioPage() {
                           setThemeId(t.id) // Sử dụng trực tiếp hàm setThemeId để lưu và cập nhật ngay lập tức
                           triggerSavedNotice()
                         }}
-                        className={`p-3.5 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between ${
+                        className={`p-4 rounded-xl border text-left transition-all cursor-pointer ${ 
                           active
                             ? 'border-red-700 bg-red-50/50 ring-2 ring-red-700/20'
                             : 'border-stone-200 hover:border-stone-300 bg-stone-50/40'
@@ -386,13 +386,11 @@ export default function ConfigurationStudioPage() {
                               {t.badge}
                             </span>
                           </div>
-                          <p className="font-bold text-sm text-stone-900">{t.name}</p>
-                          <p className="text-xs text-stone-500 mt-0.5 line-clamp-2">{t.subtitle}</p>
-                        </div>
-
-                        <div className="mt-3 pt-2 border-t border-stone-200/70 flex items-center justify-between text-xs">
-                          <span className="text-stone-500">Hiệu ứng: {t.defaultEffect}</span>
-                          {active && <span className="font-bold text-red-700">✓ Đang dùng</span>}
+                          <div className="mt-3 flex items-center justify-between gap-2">
+                            <p className="font-bold text-sm text-stone-900">{t.name}</p>
+                            {active && <span className="shrink-0 text-[11px] font-bold text-red-700">✓ Đang dùng</span>}
+                          </div>
+                          <p className="text-xs text-stone-500 mt-1 line-clamp-2">{t.subtitle}</p>
                         </div>
                       </button>
                     )
