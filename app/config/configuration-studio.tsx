@@ -686,7 +686,7 @@ export default function ConfigurationStudioPage() {
                 </div>
                 <div className="sm:col-span-2">
                   <label className="block text-xs font-semibold uppercase text-stone-600 mb-1">
-                    Câu trích dẫn tình yêu (Parallax Banner)
+                    Câu trích dẫn tình yêu
                   </label>
                   <input
                     type="text"
