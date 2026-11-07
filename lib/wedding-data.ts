@@ -14,6 +14,8 @@ export type ThemeId =
   | 'hue'
   | 'tinhkhoi'
 
+export type FontPresetId = 'theme' | 'calligraphy' | 'handwritten' | 'classic' | 'editorial' | 'modern'
+
 export type ParticleEffectType =
   | 'auto'
   | 'songhy'
@@ -625,6 +627,7 @@ export interface BankGiftInfo {
 
 export interface WeddingInvitationData {
   themeId: ThemeId
+  fontPreset: FontPresetId
   particleEffect: ParticleEffectType
   musicSrc: string
   musicTitle: string
@@ -663,6 +666,7 @@ export interface WeddingInvitationData {
 
 export const DEFAULT_WEDDING_DATA: WeddingInvitationData = {
   themeId: 'songhy',
+  fontPreset: 'theme',
   particleEffect: 'auto',
   musicSrc: '/music/beautiful-in-white.mp3',
   musicTitle: 'Beautiful In White -- Shane Filan',
