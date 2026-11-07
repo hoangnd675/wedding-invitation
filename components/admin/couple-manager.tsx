@@ -13,7 +13,7 @@ export function CoupleManager() {
   const [creating, setCreating] = useState(false)
   const [error, setError] = useState('')
   const [notice, setNotice] = useState('')
-  const [expanded, setExpanded] = useState(true)
+  const [expanded, setExpanded] = useState(false)
 
   const refresh = async () => {
     const response = await fetch('/api/couples', { cache: 'no-store' })
@@ -56,8 +56,8 @@ export function CoupleManager() {
   }
 
   return (
-    <section className="mx-auto max-w-7xl px-4 pt-5">
-      <div className="rounded-2xl border border-rose-200 bg-white p-4 sm:p-5 shadow-sm space-y-4">
+    <section className="mx-auto max-w-6xl px-3 pt-3 sm:px-5 sm:pt-4">
+      <div className="rounded-2xl border border-stone-200 bg-white p-3.5 sm:p-4 shadow-sm space-y-3">
         <div className="flex items-center justify-between gap-3">
           <h2 className="font-bold text-stone-900">Quản lý thiệp mời</h2>
           <button type="button" onClick={() => setExpanded((value) => !value)} aria-expanded={expanded} className="min-h-9 rounded-lg border border-stone-300 px-3 text-sm font-semibold inline-flex items-center gap-1.5 hover:bg-stone-50">
@@ -67,10 +67,10 @@ export function CoupleManager() {
         </div>
         {expanded && (
         <div className="space-y-4">
-        <div className="flex flex-wrap items-end gap-3">
+        <div className="flex flex-wrap items-end gap-2.5">
           <label className="grid gap-1 text-sm font-medium">
             Đang chỉnh sửa thiệp
-            <select value={selectedSlug} onChange={e => { setSelectedSlug(e.target.value); window.location.assign(`/config?couple=${encodeURIComponent(e.target.value)}`) }} className="min-h-10 rounded-lg border border-stone-300 px-3 bg-white min-w-64">
+            <select value={selectedSlug} onChange={e => { setSelectedSlug(e.target.value); window.location.assign(`/config?couple=${encodeURIComponent(e.target.value)}`) }} className="min-h-10 w-full sm:w-auto rounded-lg border border-stone-300 px-3 bg-white sm:min-w-64">
               {couples.map(c => <option key={c.id} value={c.slug}>{c.groom_name} &amp; {c.bride_name}{c.status === 'archived' ? ' (Đã lưu trữ)' : ''}</option>)}
             </select>
           </label>
