@@ -92,6 +92,7 @@ export function resetWeddingData(slug = 'hai-hung-mi-mi'): WeddingInvitationData
 export function useWeddingStore() {
   const [data, setData] = useState<WeddingInvitationData>(DEFAULT_WEDDING_DATA)
   const [hydrated, setHydrated] = useState(false)
+  const [loadError, setLoadError] = useState('')
   const [coupleId, setCoupleId] = useState<string | null>(null)
   const [coupleSlug] = useState(getCoupleSlug)
 
@@ -100,7 +101,7 @@ export function useWeddingStore() {
     const hydrateStore = async () => {
       const localData = loadWeddingData(coupleSlug)
       if (!hasSupabaseConfig()) {
-        if (active) { setData(localData); setHydrated(true) }
+        if (active) { setData(localData); setLoadError(''); setHydrated(true) }
         return
       }
       try {
@@ -108,12 +109,13 @@ export function useWeddingStore() {
         if (!active) return
         if (!remote) throw new Error('Không tải được dữ liệu thiệp.')
         setCoupleId(remote.coupleId)
+        setLoadError('')
         const next = { ...localData, ...remote.data } as WeddingInvitationData
         setData(next)
         saveWeddingData(next, coupleSlug)
       } catch (error) {
         console.error('Đồng bộ trực tuyến thất bại:', error)
-        if (active) setData(localData)
+        if (active) { setData(localData); setLoadError('Không thể tải thiệp này. Vui lòng kiểm tra đường link hoặc thử lại sau.') }
       } finally { if (active) setHydrated(true) }
     }
     void hydrateStore()
@@ -219,7 +221,7 @@ export function useWeddingStore() {
   }, [updateData, coupleId])
 
   return {
-    data, hydrated, updateData, setThemeId, addWish, addRsvp, addSharedPhoto,
+    data, hydrated, loadError, updateData, setThemeId, addWish, addRsvp, addSharedPhoto,
     resetData: () => setData(resetWeddingData(coupleSlug)),
   }
 }
