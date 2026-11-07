@@ -123,14 +123,16 @@ export function useWeddingStore() {
   }, [])
 
   const updateData = useCallback(
-    (updater: Partial<WeddingInvitationData> | ((prev: WeddingInvitationData) => WeddingInvitationData)) => {
+    (updater: Partial<WeddingInvitationData> | ((prev: WeddingInvitationData) => WeddingInvitationData), syncRemote = true) => {
       setData((prev) => {
         const next = typeof updater === 'function' ? updater(prev) : { ...prev, ...updater }
         saveWeddingData(next)
-        if (configSaveTimer) clearTimeout(configSaveTimer)
-        configSaveTimer = setTimeout(() => {
-          if (hasSupabaseConfig()) saveRemoteConfig(next).catch((error) => console.error('Lưu cấu hình trực tuyến thất bại:', error))
-        }, 900)
+        if (syncRemote) {
+          if (configSaveTimer) clearTimeout(configSaveTimer)
+          configSaveTimer = setTimeout(() => {
+            if (hasSupabaseConfig()) saveRemoteConfig(next).catch((error) => console.error('Lưu cấu hình trực tuyến thất bại:', error))
+          }, 900)
+        }
         return next
       })
     },
@@ -151,7 +153,7 @@ export function useWeddingStore() {
       id: 'w-' + Date.now(),
       createdAt: 'Vừa xong',
     }
-    updateData((prev) => ({ ...prev, wishes: [newWish, ...prev.wishes] }))
+    updateData((prev) => ({ ...prev, wishes: [newWish, ...prev.wishes] }), false)
     if (hasSupabaseConfig()) insertRemoteRow('wedding_wishes', { name: wish.name.slice(0, 80), message: wish.message.slice(0, 1000) }).catch(console.error)
     return newWish
   }, [updateData])
@@ -180,7 +182,7 @@ export function useWeddingStore() {
         rsvps: [newRsvp, ...prev.rsvps],
         wishes: updatedWishes,
       }
-    })
+    }, false)
     if (hasSupabaseConfig()) {
       insertRemoteRow('rsvps', { full_name: rsvp.name.slice(0, 120), email: '', phone: rsvp.phone.slice(0, 40), attendance_status: rsvp.attending === 'yes' ? 'attending' : 'not_attending', guest_count: rsvp.attending === 'yes' ? rsvp.guests : 0, wishes: rsvp.message.slice(0, 1000), attending: rsvp.attending, guests: rsvp.attending === 'yes' ? rsvp.guests : 0, side: rsvp.side, message: rsvp.message.slice(0, 1000) }).catch(console.error)
       if (rsvp.message.trim()) insertRemoteRow('wedding_wishes', { name: rsvp.name.slice(0, 80), message: rsvp.message.slice(0, 1000) }).catch(console.error)
@@ -188,7 +190,7 @@ export function useWeddingStore() {
     return newRsvp
   }, [updateData])
 
-  const addSharedPhoto = useCallback((photo: Omit<SharedGuestPhoto, 'id' | 'createdAt'>) => {
+  const addSharedPhoto = useCallback(async (photo: Omit<SharedGuestPhoto, 'id' | 'createdAt'>) => {
     const newPhoto: SharedGuestPhoto = {
       ...photo,
       id: 'sp-' + Date.now(),
@@ -204,7 +206,7 @@ export function useWeddingStore() {
       newPhoto.src = supabasePublicStorageUrl(`guest-photos/${path}`)
       await insertRemoteRow('guest_photos', { guest_name: photo.guestName.slice(0, 80), caption: photo.caption.slice(0, 300), image_url: newPhoto.src })
     }
-    updateData((prev) => ({ ...prev, sharedPhotos: [newPhoto, ...prev.sharedPhotos] }))
+    updateData((prev) => ({ ...prev, sharedPhotos: [newPhoto, ...prev.sharedPhotos] }), false)
     return newPhoto
   }, [updateData])
 
