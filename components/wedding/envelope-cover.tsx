@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react'
 import { ThemeConfig, WeddingInvitationData } from '@/lib/wedding-data'
-import { DoubleHappinessGlyph } from './falling-effects'
+import { ThemeEmblem } from './theme-emblem'
 
 interface EnvelopeCoverProps {
   data: WeddingInvitationData
@@ -103,10 +103,7 @@ export function EnvelopeCover({ data, theme, isOpen, onOpen }: EnvelopeCoverProp
             boxShadow: `0 0 32px ${theme.colors.accent}18`,
           }}
         >
-          <DoubleHappinessGlyph
-            className="w-11 h-11 transition-transform duration-500"
-            color={theme.colors.accent}
-          />
+          <ThemeEmblem theme={theme} className="w-11 h-11 transition-transform duration-500" />
         </div>
 
         {/* Eyebrow: THIỆP MỜI CƯỚI */}
