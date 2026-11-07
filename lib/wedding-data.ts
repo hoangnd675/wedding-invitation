@@ -226,7 +226,7 @@ export const WEDDING_THEMES: ThemeConfig[] = [
       ui: '"Quicksand", sans-serif',
       nameStyle: 'normal',
     },
-    defaultEffect: 'leaves',
+    defaultEffect: 'sparkles',
     heroStyle: 'classic-polaroid',
   },
   {
