@@ -4,6 +4,9 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+overrides:
+  baseline-browser-mapping: ^2.11.34
+
 importers:
 
   .:
@@ -32,9 +35,6 @@ importers:
       react-dom:
         specifier: ^19
         version: 19.2.4(react@19.2.4)
-      shadcn:
-        specifier: ^4.11.0
-        version: 4.19.0(typescript@5.7.3)
       tailwind-merge:
         specifier: ^3.3.1
         version: 3.4.0
@@ -57,6 +57,9 @@ importers:
       postcss:
         specifier: ^8.5
         version: 8.5.32
+      shadcn:
+        specifier: 4.19.0
+        version: 4.19.0(typescript@5.7.3)
       tailwindcss:
         specifier: ^4.3.3
         version: 4.3.3
@@ -715,10 +718,6 @@ packages:
   baseline-browser-mapping@2.11.34:
     resolution: {integrity: sha512-Aqr8mA1kIvyJ3UY5YAY7ib8LSo1DmDMbMnVqGPtsKW1LxaFQFwn9Eb3yvq2fUKJsRvaXjnAV7R5osqETapzNiA==}
     engines: {node: '>=6.0.0'}
-    hasBin: true
-
-  baseline-browser-mapping@2.9.19:
-    resolution: {integrity: sha512-ipDqC8FrAl/76p2SSWKSI+H9tFwm7vYqXQrItCuiVPt26Km0jS+NzSsBWAaBusvSbQcfJG+JitdMm+wZAgTYqg==}
     hasBin: true
 
   body-parser@2.2.2:
@@ -2444,8 +2443,6 @@ snapshots:
 
   baseline-browser-mapping@2.11.34: {}
 
-  baseline-browser-mapping@2.9.19: {}
-
   body-parser@2.2.2:
     dependencies:
       bytes: 3.1.2
@@ -3020,7 +3017,7 @@ snapshots:
     dependencies:
       '@next/env': 16.4.3
       '@swc/helpers': 0.5.23
-      baseline-browser-mapping: 2.9.19
+      baseline-browser-mapping: 2.11.34
       caniuse-lite: 1.0.30001769
       postcss: 8.5.23
       react: 19.2.4
