@@ -39,11 +39,11 @@ import {
 } from 'lucide-react'
 
 const SCROLL_EFFECT_OPTIONS: { value: PhotoScrollEffect; label: string }[] = [
-  { value: 'fade-in', label: 'Hiện dần (Fade In)' },
-  { value: 'slide-up', label: 'Lia từ dưới lên (Slide Up)' },
-  { value: 'zoom-in', label: 'Zoom từ từ (Zoom In)' },
-  { value: 'blur-clear', label: 'Làm nét từ Blur (Blur → Nét)' },
-  { value: 'tilt-rotate', label: 'Xoay nhẹ khung (Tilt Rotate)' },
+  { value: 'fade-in', label: 'Hiện dần' },
+  { value: 'slide-up', label: 'Lia từ dưới lên' },
+  { value: 'zoom-in', label: 'Phóng to từ từ' },
+  { value: 'blur-clear', label: 'Làm nét dần' },
+  { value: 'tilt-rotate', label: 'Xoay nhẹ khung' },
 ]
 
 const PARTICLE_EFFECT_OPTIONS: { value: ParticleEffectType; label: string }[] = [
@@ -312,7 +312,7 @@ export default function ConfigurationStudioPage() {
               { id: 'photos-album', label: '3. Ảnh bìa & Album ảnh', icon: ImageIcon },
               { id: 'story-venues', label: '4. Chuyện tình & Địa điểm', icon: MapPin },
               { id: 'gifts-qr', label: '5. Quà cưới & Mã QR', icon: QrCode },
-              { id: 'rsvp-wishes', label: `6. Lời chúc (${data.wishes.length}) & RSVP (${data.rsvps.length})`, icon: Users },
+              { id: 'rsvp-wishes', label: `6. Lời chúc · ${data.wishes.length} & RSVP · ${data.rsvps.length}`, icon: Users },
             ].map((tab) => {
               const Icon = tab.icon
               const active = activeTab === tab.id
@@ -533,7 +533,7 @@ export default function ConfigurationStudioPage() {
                 <div className="pt-3 border-t border-stone-200 grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs font-semibold uppercase text-stone-600 mb-1">
-                      Đường dẫn file nhạc (trong public/music/ hoặc URL)
+                      Đường dẫn file nhạc
                     </label>
                     <input
                       type="text"
@@ -545,7 +545,7 @@ export default function ConfigurationStudioPage() {
                   </div>
                   <div>
                     <label className="block text-xs font-semibold uppercase text-stone-600 mb-1">
-                      Hoặc tải file nhạc (.mp3 / .wav) từ máy
+                      Hoặc tải file nhạc từ máy
                     </label>
                     <label className="min-h-[42px] px-4 py-2 rounded-xl border border-dashed border-stone-400 hover:border-red-700 bg-stone-50 flex items-center justify-center gap-2 text-sm font-semibold cursor-pointer">
                       <Upload className="w-4 h-4 text-red-700" />
@@ -577,7 +577,7 @@ export default function ConfigurationStudioPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-semibold uppercase text-stone-600 mb-1">
-                    Tên ngắn Chú rể (Hiển thị trên Phong bì &amp; Bìa)
+                    Tên ngắn Chú rể
                   </label>
                   <input
                     type="text"
@@ -588,7 +588,7 @@ export default function ConfigurationStudioPage() {
                 </div>
                 <div>
                   <label className="block text-xs font-semibold uppercase text-stone-600 mb-1">
-                    Tên ngắn Cô dâu (Hiển thị trên Phong bì &amp; Bìa)
+                    Tên ngắn Cô dâu
                   </label>
                   <input
                     type="text"
@@ -677,7 +677,7 @@ export default function ConfigurationStudioPage() {
                 </div>
                 <div>
                   <label className="block text-xs font-semibold uppercase text-stone-600 mb-1">
-                    Chuỗi ngày hiển thị (VD: 20.12.2026)
+                    Chuỗi ngày hiển thị
                   </label>
                   <input
                     type="text"
@@ -731,17 +731,17 @@ export default function ConfigurationStudioPage() {
               <div className="bg-white rounded-2xl p-5 sm:p-6 border border-stone-200 shadow-2xs">
                 <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
                   <ImageIcon className="w-5 h-5 text-red-700" />
-                  Ảnh chính trong thiệp (Ảnh bìa, Chú rể, Cô dâu, Lễ cưới, Trích dẫn)
+                  Ảnh chính trong thiệp
                 </h2>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                   {[
-                    { key: 'heroMainPhoto', label: 'Ảnh bìa chính (Hero)' },
+                    { key: 'heroMainPhoto', label: 'Ảnh bìa chính' },
                     { key: 'groomPhoto', label: 'Ảnh chân dung Chú rể' },
                     { key: 'bridePhoto', label: 'Ảnh chân dung Cô dâu' },
                     { key: 'ceremonyPhoto', label: 'Ảnh mục Lễ thành hôn' },
                     { key: 'quotePhoto', label: 'Ảnh nền Trích dẫn' },
-                    { key: 'heroLeftPhoto', label: 'Ảnh phụ trái (Serenity/Summer)' },
+                    { key: 'heroLeftPhoto', label: 'Ảnh phụ trái' },
                   ].map((item) => {
                     const currentVal = data[item.key as keyof typeof data] as string
                     return (
@@ -786,7 +786,7 @@ export default function ConfigurationStudioPage() {
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div>
                     <h2 className="text-lg font-bold">
-                      Quản lý Album ảnh cưới ({data.album.length} ảnh)
+                      Quản lý Album ảnh cưới · {data.album.length} ảnh
                     </h2>
                     <p className="text-xs sm:text-sm text-stone-500">
                       Thêm/bớt ảnh, đổi thứ tự vị trí ảnh, và chọn hiệu ứng chuyển động lặp lại khi khách cuộn tới từng ảnh.
@@ -961,7 +961,7 @@ export default function ConfigurationStudioPage() {
             <div className="space-y-6">
               <div className="bg-white rounded-2xl p-5 sm:p-6 border border-stone-200 shadow-2xs space-y-4">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-lg font-bold">Chuyện tình yêu ({data.stories.length} cột mốc)</h2>
+                  <h2 className="text-lg font-bold">Chuyện tình yêu · {data.stories.length} cột mốc</h2>
                   <button
                     type="button"
                     onClick={() => {
@@ -1066,7 +1066,7 @@ export default function ConfigurationStudioPage() {
 
               <div className="bg-white rounded-2xl p-5 sm:p-6 border border-stone-200 shadow-2xs space-y-4">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-lg font-bold">Địa điểm &amp; Bản đồ ({data.venues.length} sự kiện)</h2>
+                  <h2 className="text-lg font-bold">Địa điểm &amp; Bản đồ · {data.venues.length} sự kiện</h2>
                   <button
                     type="button"
                     onClick={() => {
@@ -1099,7 +1099,7 @@ export default function ConfigurationStudioPage() {
                     >
                       <div>
                         <label className="block text-xs font-semibold text-stone-600 mb-1">
-                          Tên sự kiện (VD: Lễ vu quy / Tiệc cưới)
+                          Tên sự kiện
                         </label>
                         <input
                           type="text"
@@ -1137,7 +1137,7 @@ export default function ConfigurationStudioPage() {
                       </div>
                       <div>
                         <label className="block text-xs font-semibold text-stone-600 mb-1">
-                          Địa chỉ chi tiết (Tự động định vị Google Maps)
+                          Địa chỉ chi tiết
                         </label>
                         <input
                           type="text"
@@ -1198,7 +1198,7 @@ export default function ConfigurationStudioPage() {
             <div className="bg-white rounded-2xl p-5 sm:p-6 border border-stone-200 shadow-2xs space-y-6">
               <h2 className="text-lg font-bold flex items-center gap-2">
                 <QrCode className="w-5 h-5 text-red-700" />
-                Cấu hình Hộp mừng cưới &amp; Mã QR Ngân hàng (VietQR tự động)
+                Cấu hình Hộp mừng cưới &amp; Mã QR Ngân hàng
               </h2>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -1247,7 +1247,7 @@ export default function ConfigurationStudioPage() {
                         </div>
                         <div>
                           <label className="block text-xs font-semibold text-stone-600 mb-1">
-                            Mã VietQR (VCB, TCB, MB, ACB...)
+                            Mã VietQR
                           </label>
                           <input
                             type="text"
@@ -1279,7 +1279,7 @@ export default function ConfigurationStudioPage() {
                       </div>
                       <div>
                         <label className="block text-xs font-semibold text-stone-600 mb-1">
-                          Chủ tài khoản (Không dấu)
+                          Chủ tài khoản
                         </label>
                         <input
                           type="text"
@@ -1347,7 +1347,7 @@ export default function ConfigurationStudioPage() {
               <div className="bg-white rounded-2xl p-5 sm:p-6 border border-stone-200 shadow-2xs space-y-3">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div>
-                    <h3 className="text-base font-bold">Danh sách khách xác nhận tham dự ({data.rsvps.length})</h3>
+                    <h3 className="text-base font-bold">Danh sách khách xác nhận tham dự · {data.rsvps.length}</h3>
                     <p className="text-xs text-stone-500 mt-1">Dữ liệu được lấy trực tiếp từ Supabase.</p>
                   </div>
                   <div className="flex flex-wrap gap-2">
@@ -1412,7 +1412,7 @@ export default function ConfigurationStudioPage() {
                                 : 'bg-stone-200 text-stone-700'
                             }`}
                           >
-                            {r.attending === 'yes' ? `Tham dự (${r.guests} người)` : 'Không tham dự'}
+                            {r.attending === 'yes' ? `Tham dự · ${r.guests} người` : 'Không tham dự'}
                           </span>
                         </p>
                         <p className="text-xs text-stone-500">
@@ -1438,7 +1438,7 @@ export default function ConfigurationStudioPage() {
 
               <div className="bg-white rounded-2xl p-5 sm:p-6 border border-stone-200 shadow-2xs space-y-4">
                 <div>
-                  <h3 className="text-base font-bold">Ảnh khách mời gửi lên ({data.sharedPhotos.length})</h3>
+                  <h3 className="text-base font-bold">Ảnh khách mời gửi lên · {data.sharedPhotos.length}</h3>
                   <p className="text-xs text-stone-500 mt-1">Ảnh được lưu trong Supabase Storage cùng tên người gửi trong dữ liệu ảnh.</p>
                 </div>
                 {data.sharedPhotos.length === 0 ? (
@@ -1470,13 +1470,13 @@ export default function ConfigurationStudioPage() {
               </div>
 
               <div className="bg-white rounded-2xl p-5 sm:p-6 border border-stone-200 shadow-2xs space-y-3">
-                <h3 className="text-base font-bold">Danh sách lời chúc ({data.wishes.length})</h3>
+                <h3 className="text-base font-bold">Danh sách lời chúc · {data.wishes.length}</h3>
                 <div className="divide-y divide-stone-200 max-h-[360px] overflow-y-auto">
                   {data.wishes.map((w) => (
                     <div key={w.id} className="py-3 flex items-start justify-between gap-4 text-sm">
                       <div>
                         <p className="font-bold text-stone-900">
-                          {w.name} <span className="font-normal text-xs text-stone-400">({w.createdAt})</span>
+                          {w.name} <span className="font-normal text-xs text-stone-400">· {w.createdAt}</span>
                         </p>
                         <p className="text-stone-600">{w.message}</p>
                       </div>
