@@ -4,7 +4,6 @@ import React from 'react'
 import { ThemeConfig, WeddingInvitationData } from '@/lib/wedding-data'
 import { ThemeEmblem } from './theme-emblem'
 import { ScrollReveal, ParallaxBox } from './scroll-reveal'
-import { formatVietnameseLunarDate } from '@/lib/vietnamese-lunar'
 
 interface HeroSectionProps {
   data: WeddingInvitationData
@@ -91,7 +90,6 @@ function FretworkCornerSvg({ className, color }: { className?: string; color: st
 
 export function HeroSection({ data, theme, onOpenLightbox }: HeroSectionProps) {
   const { colors, fonts, heroStyle } = theme
-  const lunarDateText = formatVietnameseLunarDate(data.weddingDate) || data.lunarDateText
 
   // 1. SONG HỶ — Red velvet & gold traditional hero with lanterns, fretwork corners, circular moon-gate photo
   if (heroStyle === 'songhy-lantern') {
@@ -182,7 +180,7 @@ export function HeroSection({ data, theme, onOpenLightbox }: HeroSectionProps) {
           <p className="text-lg sm:text-xl mt-3 font-medium" style={{ fontFamily: fonts.head, color: colors.navInk }}>
             Chủ nhật, {data.weddingDateDisplay} · {data.weddingTime}
           </p>
-          <p className="text-sm sm:text-base italic mt-1" style={{ color: colors.gold }}>{lunarDateText}</p>
+          <p className="text-sm sm:text-base italic mt-1" style={{ color: colors.gold }}>{data.lunarDateText}</p>
         </ScrollReveal>
       </section>
     )
@@ -245,7 +243,7 @@ export function HeroSection({ data, theme, onOpenLightbox }: HeroSectionProps) {
           <p className="text-base sm:text-lg tracking-[0.28em] uppercase text-white/95 font-medium" style={{ fontFamily: fonts.ui }}>
             {data.weddingDateDisplay} · {data.weddingTime}
           </p>
-          <p className="text-sm sm:text-base text-white/80 italic mt-1.5">{lunarDateText}</p>
+          <p className="text-sm sm:text-base text-white/80 italic mt-1.5">{data.lunarDateText}</p>
         </ScrollReveal>
       </section>
     )
@@ -317,7 +315,7 @@ export function HeroSection({ data, theme, onOpenLightbox }: HeroSectionProps) {
           <p className="text-lg sm:text-xl mt-3 tracking-widest" style={{ fontFamily: fonts.head, color: colors.ink }}>
             {data.weddingDateDisplay} · {data.weddingTime}
           </p>
-          <p className="text-sm sm:text-base italic mt-1" style={{ color: colors.muted }}>{lunarDateText}</p>
+          <p className="text-sm sm:text-base italic mt-1" style={{ color: colors.muted }}>{data.lunarDateText}</p>
         </ScrollReveal>
       </section>
     )
@@ -367,7 +365,7 @@ export function HeroSection({ data, theme, onOpenLightbox }: HeroSectionProps) {
                   Chủ nhật · {data.weddingDateDisplay} · {data.weddingTime}
                 </p>
                 <p className="text-sm mt-1" style={{ color: colors.muted }}>
-                  {lunarDateText}
+                  {data.lunarDateText}
                 </p>
               </div>
             </ScrollReveal>
@@ -593,7 +591,7 @@ export function HeroSection({ data, theme, onOpenLightbox }: HeroSectionProps) {
             Chủ nhật, {data.weddingDateDisplay} · {data.weddingTime}
           </p>
           <p className="text-sm sm:text-base italic mt-1.5" style={{ color: colors.muted }}>
-            {lunarDateText}
+            {data.lunarDateText}
           </p>
 
           {/* Heart Divider */}
