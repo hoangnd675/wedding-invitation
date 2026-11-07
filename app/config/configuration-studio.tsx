@@ -88,6 +88,7 @@ export default function ConfigurationStudioPage() {
   const [newPhotoUrl, setNewPhotoUrl] = useState('')
   const [newPhotoCaption, setNewPhotoCaption] = useState('')
   const [newPhotoEffect, setNewPhotoEffect] = useState<PhotoScrollEffect>('fade-in')
+  const [showRsvpFilePreview, setShowRsvpFilePreview] = useState(false)
 
   const triggerSavedNotice = () => {
     setSavedNotice(true)
@@ -190,6 +191,56 @@ export default function ConfigurationStudioPage() {
     a.click()
     document.body.removeChild(a)
     URL.revokeObjectURL(url)
+  }
+
+  const handleDownloadRsvpFile = () => {
+    const rows = [
+      ['Họ tên khách', 'Xác nhận', 'Số người', 'Số điện thoại', 'Phía khách', 'Lời nhắn', 'Thời gian'],
+      ...data.rsvps.map((r) => [
+        r.name,
+        r.attending === 'yes' ? 'Tham dự' : 'Không tham dự',
+        r.attending === 'yes' ? String(r.guests) : '0',
+        r.phone || '',
+        r.side === 'groom' ? 'Nhà trai' : 'Nhà gái',
+        r.message || '',
+        r.createdAt || '',
+      ]),
+    ]
+    const csv = '\uFEFF' + rows.map((row) =>
+      row.map((value) => '"' + String(value ?? '').replace(/"/g, '""') + '"').join(',')
+    ).join('\r\n')
+    const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }))
+    const link = document.createElement('a')
+    link.href = url
+    link.download = 'danh-sach-khach-xac-nhan-tham-du.csv'
+    document.body.appendChild(link)
+    link.click()
+    link.remove()
+    URL.revokeObjectURL(url)
+  }
+
+  const safeDownloadName = (value: string) =>
+    value.normalize('NFD').replace(/[\\u0300-\\u036f]/g, '')
+      .replace(/[^a-zA-Z0-9_-]+/g, '-').replace(/^-+|-+$/g, '') || 'khach-moi'
+
+  const handleDownloadGuestPhoto = async (photo: (typeof data.sharedPhotos)[number]) => {
+    try {
+      const response = await fetch(photo.src)
+      if (!response.ok) throw new Error('Không thể tải ảnh từ Supabase.')
+      const blob = await response.blob()
+      const extension = blob.type.includes('png') ? 'png' : blob.type.includes('webp') ? 'webp' : 'jpg'
+      const url = URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = `${safeDownloadName(photo.guestName)}-${photo.id}.${extension}`
+      document.body.appendChild(link)
+      link.click()
+      link.remove()
+      window.setTimeout(() => URL.revokeObjectURL(url), 1000)
+    } catch (error) {
+      console.error('Guest photo download failed:', error)
+      window.open(photo.src, '_blank', 'noopener,noreferrer')
+    }
   }
 
   if (!hydrated) {
@@ -1278,9 +1329,60 @@ export default function ConfigurationStudioPage() {
               </div>
 
               <div className="bg-white rounded-2xl p-5 sm:p-6 border border-stone-200 shadow-2xs space-y-3">
-                <h3 className="text-base font-bold">
-                  Danh sách khách xác nhận tham dự ({data.rsvps.length})
-                </h3>
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div>
+                    <h3 className="text-base font-bold">Danh sách khách xác nhận tham dự ({data.rsvps.length})</h3>
+                    <p className="text-xs text-stone-500 mt-1">Dữ liệu được lấy trực tiếp từ Supabase.</p>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setShowRsvpFilePreview((value) => !value)}
+                      className="min-h-[38px] px-3 py-2 rounded-lg border border-stone-300 text-xs font-semibold inline-flex items-center gap-1.5 cursor-pointer"
+                    >
+                      <Eye className="w-4 h-4" /> {showRsvpFilePreview ? 'Ẩn bản xem' : 'Xem file xác nhận'}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleDownloadRsvpFile}
+                      disabled={data.rsvps.length === 0}
+                      className="min-h-[38px] px-3 py-2 rounded-lg bg-stone-900 text-white text-xs font-semibold inline-flex items-center gap-1.5 disabled:opacity-40 cursor-pointer"
+                    >
+                      <Download className="w-4 h-4" /> Tải file CSV
+                    </button>
+                  </div>
+                </div>
+                {showRsvpFilePreview && (
+                  <div className="overflow-x-auto rounded-xl border border-stone-200">
+                    <table className="w-full text-xs text-left">
+                      <thead className="bg-stone-100 text-stone-600">
+                        <tr>
+                          <th className="p-2.5">Họ tên</th>
+                          <th className="p-2.5">Xác nhận</th>
+                          <th className="p-2.5">Số người</th>
+                          <th className="p-2.5">Điện thoại</th>
+                          <th className="p-2.5">Phía khách</th>
+                          <th className="p-2.5">Thời gian</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-stone-100">
+                        {data.rsvps.map((r) => (
+                          <tr key={r.id}>
+                            <td className="p-2.5 font-semibold">{r.name}</td>
+                            <td className="p-2.5">{r.attending === 'yes' ? 'Tham dự' : 'Không tham dự'}</td>
+                            <td className="p-2.5">{r.attending === 'yes' ? r.guests : 0}</td>
+                            <td className="p-2.5">{r.phone || '--'}</td>
+                            <td className="p-2.5">{r.side === 'groom' ? 'Nhà trai' : 'Nhà gái'}</td>
+                            <td className="p-2.5 whitespace-nowrap">{r.createdAt || '--'}</td>
+                          </tr>
+                        ))}
+                        {data.rsvps.length === 0 && (
+                          <tr><td colSpan={6} className="p-4 text-center text-stone-500">Chưa có khách xác nhận.</td></tr>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
                 <div className="divide-y divide-stone-200">
                   {data.rsvps.map((r) => (
                     <div key={r.id} className="py-3 flex items-center justify-between gap-4 text-sm">
@@ -1316,6 +1418,39 @@ export default function ConfigurationStudioPage() {
                     </div>
                   ))}
                 </div>
+              </div>
+
+              <div className="bg-white rounded-2xl p-5 sm:p-6 border border-stone-200 shadow-2xs space-y-4">
+                <div>
+                  <h3 className="text-base font-bold">Ảnh khách mời gửi lên ({data.sharedPhotos.length})</h3>
+                  <p className="text-xs text-stone-500 mt-1">Ảnh được lưu trong Supabase Storage cùng tên người gửi trong dữ liệu ảnh.</p>
+                </div>
+                {data.sharedPhotos.length === 0 ? (
+                  <p className="text-sm text-stone-500 py-4 text-center">Chưa có ảnh nào được gửi.</p>
+                ) : (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+                    {data.sharedPhotos.map((photo) => (
+                      <article key={photo.id} className="overflow-hidden rounded-xl border border-stone-200 bg-stone-50">
+                        <a href={photo.src} target="_blank" rel="noopener noreferrer" aria-label={`Xem ảnh của ${photo.guestName}`}>
+                          <img src={photo.src} alt={`Ảnh do ${photo.guestName} gửi`} className="w-full h-48 object-cover bg-stone-100" loading="lazy" />
+                        </a>
+                        <div className="p-3 space-y-2">
+                          <p className="font-bold text-sm text-stone-900">{photo.guestName}</p>
+                          <p className="text-xs text-stone-600">{photo.caption || 'Không có chú thích'}</p>
+                          <p className="text-[11px] text-stone-400">{photo.createdAt || ''}</p>
+                          <div className="flex flex-wrap gap-2 pt-1">
+                            <a href={photo.src} target="_blank" rel="noopener noreferrer" className="min-h-[34px] px-3 rounded-lg border border-stone-300 bg-white text-xs font-semibold inline-flex items-center gap-1.5">
+                              <Eye className="w-3.5 h-3.5" /> Xem ảnh
+                            </a>
+                            <button type="button" onClick={() => void handleDownloadGuestPhoto(photo)} className="min-h-[34px] px-3 rounded-lg bg-stone-900 text-white text-xs font-semibold inline-flex items-center gap-1.5 cursor-pointer">
+                              <Download className="w-3.5 h-3.5" /> Tải ảnh
+                            </button>
+                          </div>
+                        </div>
+                      </article>
+                    ))}
+                  </div>
+                )}
               </div>
 
               <div className="bg-white rounded-2xl p-5 sm:p-6 border border-stone-200 shadow-2xs space-y-3">
