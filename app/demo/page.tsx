@@ -6,10 +6,12 @@ import {
   MUSIC_TRACKS,
   ParticleEffectType,
   ThemeId,
+  FontPresetId,
   WEDDING_THEMES,
 } from '@/lib/wedding-data'
 import { useWeddingStore } from '@/lib/wedding-store'
 import { WeddingInvitationView } from '@/components/wedding/wedding-invitation-view'
+import { FontStylePicker } from '@/components/wedding/font-style-picker'
 import {
   Eye,
   MailOpen,
@@ -17,6 +19,7 @@ import {
   Palette,
   Settings,
   Sparkles,
+  Type,
 } from 'lucide-react'
 
 const PARTICLE_OPTIONS: { id: ParticleEffectType; label: string }[] = [
@@ -44,7 +47,6 @@ const getVietnameseName = (name: string) => {
 export default function DemoShowcasePage() {
   const {
     data,
-    updateData,
     addRsvp,
     addWish,
     addSharedPhoto,
@@ -54,12 +56,13 @@ export default function DemoShowcasePage() {
   const [demoParticle, setDemoParticle] =
     useState<ParticleEffectType>('auto')
   const [demoMusic, setDemoMusic] = useState<string>(data.musicSrc)
+  const [demoFontPreset, setDemoFontPreset] = useState<FontPresetId>(data.fontPreset || 'theme')
 
   const [coverOpen, setCoverOpen] = useState<boolean>(false)
   const [panelExpanded, setPanelExpanded] = useState<boolean>(true)
 
   const [activeTab, setActiveTab] =
-    useState<'themes' | 'effects' | 'music'>('themes')
+    useState<'themes' | 'effects' | 'music' | 'fonts'>('themes')
 
   // Quản lý nhạc nghe thử
   const previewAudioRef = useRef<HTMLAudioElement | null>(null)
@@ -146,20 +149,8 @@ export default function DemoShowcasePage() {
       // Dừng nhạc thử
       stopMusicPreview()
 
-      // Tìm bài nhạc được chọn
-      const selectedTrack = MUSIC_TRACKS.find(
-        (t) => t.src === demoMusic
-      )
-
-      // Lưu cấu hình
-      updateData({
-        themeId: demoTheme,
-        particleEffect: demoParticle,
-        musicSrc: demoMusic,
-        musicTitle: selectedTrack
-          ? `${selectedTrack.title} -- ${selectedTrack.artist}`
-          : data.musicTitle,
-      })
+      // Chỉ đóng bảng xem thử. Mọi lựa chọn trong trang demo đều là trạng thái tạm thời.
+      // Không ghi vào LocalStorage hoặc Supabase.
 
       // Thu gọn bảng
       setPanelExpanded(false)
@@ -177,6 +168,7 @@ export default function DemoShowcasePage() {
         themeOverride={demoTheme}
         particleOverride={demoParticle}
         musicOverride={demoMusic}
+        fontPresetOverride={demoFontPreset}
         initialCoverOpen={coverOpen}
         onCoverOpenChange={setCoverOpen}
         onAddRsvp={addRsvp}
@@ -281,6 +273,20 @@ export default function DemoShowcasePage() {
                 Hiệu ứng rơi
               </button>
 
+              {/* Tab phông chữ */}
+              <button
+                type="button"
+                onClick={() => setActiveTab('fonts')}
+                className={`flex-1 py-1.5 px-3 rounded-lg text-xs font-semibold inline-flex items-center justify-center gap-1.5 cursor-pointer transition-colors ${
+                  activeTab === 'fonts'
+                    ? 'bg-white text-stone-950 shadow-xs'
+                    : 'text-white/75 hover:text-white'
+                }`}
+              >
+                <Type className="w-3.5 h-3.5" />
+                Phông chữ
+              </button>
+
               {/* Tab nhạc */}
               <button
                 type="button"
@@ -379,6 +385,21 @@ export default function DemoShowcasePage() {
                   )
                 })}
 
+              </div>
+            )}
+
+            {/* TAB PHÔNG CHỮ - CHỈ THAY ĐỔI BẢN DEMO */}
+            {activeTab === 'fonts' && (
+              <div className="max-h-[260px] overflow-y-auto pr-1">
+                <p className="mb-3 text-xs text-white/65">
+                  Chọn thử kiểu chữ. Lựa chọn này chỉ tồn tại trong phiên demo, không lưu vào thiệp chính.
+                </p>
+                <FontStylePicker
+                  variant="dark"
+                  selected={demoFontPreset}
+                  fallbackFonts={currentThemeObj.fonts}
+                  onChange={setDemoFontPreset}
+                />
               </div>
             )}
 
