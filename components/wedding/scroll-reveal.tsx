@@ -124,7 +124,7 @@ export function ParallaxBox({
         const windowCenter = window.innerHeight / 2
         const elementCenter = rect.top + rect.height / 2
         const delta = (elementCenter - windowCenter) * speed
-        setOffset(Math.max(-45, Math.min(45, delta)))
+        setOffset(Math.max(-18, Math.min(18, delta)))
       })
     }
 
@@ -139,7 +139,7 @@ export function ParallaxBox({
   return (
     <div ref={ref} className={cn('relative overflow-hidden', className)}>
       <div
-        style={{ transform: `translate3d(0, ${offset}px, 0) scale(1.08)` }}
+        style={{ transform: `translate3d(0, ${offset}px, 0) scale(1.18)` }}
         className="w-full h-full transition-transform duration-150 ease-out will-change-transform"
       >
         {children}
