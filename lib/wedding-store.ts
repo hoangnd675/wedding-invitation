@@ -213,8 +213,7 @@ export function useWeddingStore() {
     if (!guestName || guestName.length > 80) throw new Error('Vui lòng nhập tên người gửi (tối đa 80 ký tự).')
     if (!photo.src.startsWith('data:image/')) throw new Error('Ảnh gửi lên không hợp lệ. Vui lòng chọn lại ảnh.')
     const newPhoto: SharedGuestPhoto = { ...photo, guestName, id: 'sp-' + Date.now(), createdAt: 'Vừa xong' }
-    {
-      const blob = await (await fetch(photo.src)).blob()
+    const blob = await (await fetch(photo.src)).blob()
       if (!['image/jpeg', 'image/png', 'image/webp'].includes(blob.type) || blob.size > 5 * 1024 * 1024) {
         throw new Error('Ảnh phải là JPG, PNG hoặc WebP và tối đa 5 MB.')
       }
