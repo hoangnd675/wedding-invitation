@@ -170,19 +170,28 @@ export function useWeddingStore() {
   }, [updateData, coupleId])
 
   const addRsvp = useCallback(async (rsvp: Omit<RsvpSubmission, 'id' | 'createdAt'>) => {
-    if (!hasSupabaseConfig() || !coupleId) throw new Error('Thiệp cưới chưa kết nối dữ liệu trực tuyến. Vui lòng thử lại sau.')
-    const safeRsvp = {
-      couple_id: coupleId,
-      full_name: rsvp.name.trim().slice(0, 120), email: '',
-      phone: rsvp.phone.trim().slice(0, 40),
-      attendance_status: rsvp.attending === 'yes' ? 'attending' : 'not_attending',
-      guest_count: rsvp.attending === 'yes' ? rsvp.guests : 0,
-      wishes: rsvp.message.trim().slice(0, 1000), attending: rsvp.attending,
-      guests: rsvp.attending === 'yes' ? rsvp.guests : 0, side: rsvp.side,
-      message: rsvp.message.trim().slice(0, 1000),
+    if (!hasSupabaseConfig()) throw new Error('Thiệp cưới chưa kết nối dữ liệu trực tuyến. Vui lòng thử lại sau.')
+    const response = await fetch('/api/rsvp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        couple: coupleSlug,
+        name: rsvp.name,
+        attending: rsvp.attending,
+        guests: rsvp.attending === 'yes' ? rsvp.guests : 0,
+        phone: rsvp.phone,
+        side: rsvp.side,
+        message: rsvp.message,
+      }),
+    })
+    const result = await response.json().catch(() => ({}))
+    if (!response.ok) throw new Error(result.error || 'Không thể lưu xác nhận. Vui lòng thử lại.')
+    const saved = result.rsvp
+    const newRsvp: RsvpSubmission = {
+      ...rsvp,
+      id: saved?.id || 'r-' + Date.now(),
+      createdAt: saved?.created_at ? new Date(saved.created_at).toLocaleString('vi-VN') : new Date().toLocaleString('vi-VN'),
     }
-    await insertRemoteRow('rsvps', safeRsvp)
-    const newRsvp: RsvpSubmission = { ...rsvp, id: 'r-' + Date.now(), createdAt: new Date().toLocaleString('vi-VN') }
     updateData(prev => {
       const updatedWishes = rsvp.message.trim() ? [{
         id: 'w-rsvp-' + Date.now(), name: rsvp.name, message: rsvp.message.trim(), createdAt: 'Vừa xong',
