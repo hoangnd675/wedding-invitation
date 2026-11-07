@@ -11,7 +11,7 @@ import {
 } from '@/lib/wedding-data'
 import { SectionHeader } from './couple-story-section'
 import { ScrollReveal } from './scroll-reveal'
-import { DoubleHappinessGlyph } from './falling-effects'
+import { ThemeEmblem } from './theme-emblem'
 import {
   Camera,
   Check,
@@ -906,7 +906,7 @@ export function RsvpWishesShareGiftSection({
             backgroundColor: colors.paper,
           }}
         >
-          <DoubleHappinessGlyph className="w-10 h-10" color={colors.accent} />
+          <ThemeEmblem theme={theme} className="w-10 h-10" />
         </div>
         <p
           className="text-xl sm:text-2xl font-medium max-w-md mx-auto mb-2"
