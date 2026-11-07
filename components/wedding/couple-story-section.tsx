@@ -181,17 +181,9 @@ export function CoupleStorySection({ data, theme, onOpenLightbox }: CoupleStoryS
               {data.groomFullName}
             </h3>
             {data.groomFamilyInfo && (
-              <div className="mt-2 flex flex-col items-center text-center leading-snug" style={{ color: colors.muted, fontSize: "clamp(0.75rem, 3.95vw, 1.1rem)" }}>
-                {data.groomFamilyInfo.split('&').map((parent, index) => {
-                  const name = parent.replace(/^(Con trai|Con gái)\s*/i, '').trim()
-                  return name ? (
-                    <React.Fragment key={index}>
-                      {index > 0 && <span className="my-0.5">và</span>}
-                      <span>{name}</span>
-                    </React.Fragment>
-                  ) : null
-                })}
-              </div>
+              <p className="mt-2 w-full max-w-none whitespace-nowrap text-center leading-relaxed" style={{ color: colors.muted, fontSize: "clamp(0.75rem, 3.95vw, 1.1rem)" }}>
+                {data.groomFamilyInfo}
+              </p>
             )}
           </ScrollReveal>
 
@@ -266,17 +258,9 @@ export function CoupleStorySection({ data, theme, onOpenLightbox }: CoupleStoryS
               {data.brideFullName}
             </h3>
             {data.brideFamilyInfo && (
-              <div className="mt-2 flex flex-col items-center text-center leading-snug" style={{ color: colors.muted, fontSize: "clamp(0.75rem, 3.95vw, 1.1rem)" }}>
-                {data.brideFamilyInfo.split('&').map((parent, index) => {
-                  const name = parent.replace(/^(Con trai|Con gái)\s*/i, '').trim()
-                  return name ? (
-                    <React.Fragment key={index}>
-                      {index > 0 && <span className="my-0.5">và</span>}
-                      <span>{name}</span>
-                    </React.Fragment>
-                  ) : null
-                })}
-              </div>
+              <p className="mt-2 w-full max-w-none whitespace-nowrap text-center leading-relaxed" style={{ color: colors.muted, fontSize: "clamp(0.75rem, 3.95vw, 1.1rem)" }}>
+                {data.brideFamilyInfo}
+              </p>
             )}
           </ScrollReveal>
         </div>
