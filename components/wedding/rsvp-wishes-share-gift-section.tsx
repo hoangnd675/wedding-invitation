@@ -13,7 +13,6 @@ import { SectionHeader } from './couple-story-section'
 import { ScrollReveal } from './scroll-reveal'
 import { ThemeEmblem } from './theme-emblem'
 import {
-  Camera,
   Check,
   Copy,
   Download,
@@ -556,16 +555,6 @@ export function RsvpWishesShareGiftSection({
       >
         <div className="max-w-4xl mx-auto">
           <ScrollReveal effect="glow-rise">
-            <div
-              className="w-14 h-14 rounded-full mx-auto mb-4 flex items-center justify-center"
-              style={{
-                backgroundColor: colors.soft,
-                color: colors.accentInk,
-                border: `1px solid ${colors.accent}44`,
-              }}
-            >
-              <Camera className="w-6 h-6" />
-            </div>
             <h2
               className="text-2xl sm:text-4xl font-bold mb-3"
               style={{ fontFamily: fonts.head, color: colors.ink }}
