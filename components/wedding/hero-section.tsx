@@ -166,8 +166,8 @@ export function HeroSection({ data, theme, onOpenLightbox }: HeroSectionProps) {
         {/* Save Card Text */}
         <ScrollReveal effect="glow-rise" delay={120} className="relative z-10 mt-8 max-w-xl mx-auto px-4">
           <p
-            className="uppercase tracking-[0.28em] text-xs sm:text-sm mb-3"
-            style={{ fontFamily: fonts.ui, color: colors.navInk }}
+            className="w-full max-w-full whitespace-nowrap text-center uppercase mb-3"
+            style={{ fontFamily: fonts.ui, color: colors.navInk, fontSize: 'clamp(0.48rem, 2.35vw, 0.875rem)', letterSpacing: 'clamp(0.04em, 0.65vw, 0.24em)', whiteSpace: 'nowrap' }}
           >
             {data.heroEyebrow}
           </p>
@@ -227,7 +227,7 @@ export function HeroSection({ data, theme, onOpenLightbox }: HeroSectionProps) {
         >
           <div className="flex items-center justify-center gap-3 mb-4">
             <span className="w-12 h-px bg-white/70" />
-            <p className="uppercase tracking-[0.24em] text-xs sm:text-sm text-white/90" style={{ fontFamily: fonts.ui }}>
+            <p className="min-w-0 flex-1 whitespace-nowrap text-center uppercase text-white/90" style={{ fontFamily: fonts.ui, fontSize: 'clamp(0.48rem, 2.35vw, 0.875rem)', letterSpacing: 'clamp(0.04em, 0.65vw, 0.24em)', whiteSpace: 'nowrap' }}>
               {data.heroEyebrow}
             </p>
             <span className="w-12 h-px bg-white/70" />
@@ -303,7 +303,7 @@ export function HeroSection({ data, theme, onOpenLightbox }: HeroSectionProps) {
         </ScrollReveal>
 
         <ScrollReveal effect="glow-rise" delay={140} className="relative z-10 mt-8 max-w-xl mx-auto">
-          <p className="uppercase tracking-[0.3em] text-xs sm:text-sm mb-3" style={{ fontFamily: fonts.ui, color: colors.muted }}>
+          <p className="w-full max-w-full whitespace-nowrap text-center uppercase mb-3" style={{ fontFamily: fonts.ui, color: colors.muted, fontSize: 'clamp(0.48rem, 2.35vw, 0.875rem)', letterSpacing: 'clamp(0.04em, 0.65vw, 0.24em)', whiteSpace: 'nowrap' }}>
             {data.heroEyebrow}
           </p>
           <h1
@@ -346,9 +346,9 @@ export function HeroSection({ data, theme, onOpenLightbox }: HeroSectionProps) {
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end my-auto">
             <ScrollReveal effect="slide-up" className="lg:col-span-5 text-left order-2 lg:order-1">
-              <div className="flex items-center gap-3 mb-5">
-                <span className="w-12 h-px" style={{ backgroundColor: colors.ink }} />
-                <p className="uppercase tracking-[0.24em] text-xs font-semibold" style={{ fontFamily: fonts.ui }}>
+              <div className="flex items-center gap-2 sm:gap-3 mb-5 min-w-0">
+                <span className="w-5 sm:w-12 h-px shrink-0" style={{ backgroundColor: colors.ink }} />
+                <p className="min-w-0 flex-1 whitespace-nowrap uppercase text-center font-semibold" style={{ fontFamily: fonts.ui, fontSize: 'clamp(0.48rem, 2.35vw, 0.875rem)', letterSpacing: 'clamp(0.04em, 0.65vw, 0.24em)', whiteSpace: 'nowrap' }}>
                   {data.heroEyebrow}
                 </p>
               </div>
@@ -565,8 +565,8 @@ export function HeroSection({ data, theme, onOpenLightbox }: HeroSectionProps) {
           </div>
 
           <p
-            className="uppercase tracking-[0.24em] text-xs sm:text-sm font-semibold mb-3"
-            style={{ color: colors.muted, fontFamily: fonts.ui }}
+            className="w-full max-w-full whitespace-nowrap text-center uppercase font-semibold mb-3"
+            style={{ color: colors.muted, fontFamily: fonts.ui, fontSize: 'clamp(0.48rem, 2.35vw, 0.875rem)', letterSpacing: 'clamp(0.04em, 0.65vw, 0.24em)', whiteSpace: 'nowrap' }}
           >
             {data.heroEyebrow}
           </p>
