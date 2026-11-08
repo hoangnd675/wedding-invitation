@@ -88,6 +88,8 @@ export default function ConfigurationStudioPage() {
   const [savedNotice, setSavedNotice] = useState(false)
   const [musicUploading, setMusicUploading] = useState(false)
   const [musicUploadError, setMusicUploadError] = useState('')
+  const [deletingPhotoId, setDeletingPhotoId] = useState<string | null>(null)
+  const [photoDeleteError, setPhotoDeleteError] = useState('')
   const [newPhotoUrl, setNewPhotoUrl] = useState('')
   const [newPhotoCaption, setNewPhotoCaption] = useState('')
   const [newPhotoEffect, setNewPhotoEffect] = useState<PhotoScrollEffect>('fade-in')
@@ -227,6 +229,30 @@ export default function ConfigurationStudioPage() {
   const safeDownloadName = (value: string) =>
     value.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
       .replace(/[^a-zA-Z0-9_-]+/g, '-').replace(/^-+|-+$/g, '') || 'khach-moi'
+
+  const handleDeleteGuestPhoto = async (photo: (typeof data.sharedPhotos)[number]) => {
+    if (!window.confirm(`Xóa ảnh do ${photo.guestName} gửi? Ảnh sẽ bị xóa khỏi thiệp và kho lưu trữ.`)) return
+
+    setDeletingPhotoId(photo.id)
+    setPhotoDeleteError('')
+    try {
+      const couple = new URLSearchParams(window.location.search).get('couple') || 'hai-hung-mi-mi'
+      const response = await fetch(`/api/admin/guest-photos?id=${encodeURIComponent(photo.id)}&couple=${encodeURIComponent(couple)}`, {
+        method: 'DELETE',
+      })
+      const result = await response.json().catch(() => ({}))
+      if (!response.ok) throw new Error(result.error || 'Không thể xóa ảnh.')
+
+      updateData(prev => ({
+        ...prev,
+        sharedPhotos: prev.sharedPhotos.filter(item => item.id !== photo.id),
+      }), false)
+    } catch (error) {
+      setPhotoDeleteError(error instanceof Error ? error.message : 'Không thể xóa ảnh. Vui lòng thử lại.')
+    } finally {
+      setDeletingPhotoId(null)
+    }
+  }
 
   const handleDownloadGuestPhoto = async (photo: (typeof data.sharedPhotos)[number]) => {
     try {
@@ -1395,6 +1421,7 @@ export default function ConfigurationStudioPage() {
                 <div>
                   <h3 className="text-base font-bold">Ảnh khách mời gửi lên · {data.sharedPhotos.length}</h3>
                 </div>
+                {photoDeleteError && <p role="alert" className="text-sm text-rose-700">{photoDeleteError}</p>}
                 {data.sharedPhotos.length === 0 ? (
                   <p className="text-sm text-stone-500 py-4 text-center">Chưa có ảnh nào được gửi.</p>
                 ) : (
@@ -1414,6 +1441,14 @@ export default function ConfigurationStudioPage() {
                             </a>
                             <button type="button" onClick={() => void handleDownloadGuestPhoto(photo)} className="min-h-[34px] px-3 rounded-lg bg-stone-900 text-white text-xs font-semibold inline-flex items-center gap-1.5 cursor-pointer">
                               <Download className="w-3.5 h-3.5" /> Tải ảnh
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => void handleDeleteGuestPhoto(photo)}
+                              disabled={deletingPhotoId === photo.id}
+                              className="min-h-[34px] px-3 rounded-lg border border-rose-200 bg-rose-50 text-rose-700 text-xs font-semibold inline-flex items-center gap-1.5 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" /> {deletingPhotoId === photo.id ? 'Đang xóa…' : 'Xóa ảnh'}
                             </button>
                           </div>
                         </div>
