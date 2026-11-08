@@ -1326,9 +1326,6 @@ export default function ConfigurationStudioPage() {
               <div className="bg-white rounded-2xl p-5 sm:p-6 border border-stone-200 shadow-2xs flex flex-wrap items-center justify-between gap-4">
                 <div>
                   <h2 className="text-lg font-bold">Sao lưu cấu hình &amp; Khôi phục mặc định</h2>
-                  <p className="text-xs sm:text-sm text-stone-500">
-                    Xuất file JSON cấu hình hoặc đặt lại dữ liệu mẫu ban đầu.
-                  </p>
                 </div>
                 <div className="flex flex-wrap gap-2.5">
                   <button
@@ -1355,7 +1352,6 @@ export default function ConfigurationStudioPage() {
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div>
                     <h3 className="text-base font-bold">Danh sách khách xác nhận tham dự · {data.rsvps.length}</h3>
-                    <p className="text-xs text-stone-500 mt-1">Dữ liệu được lấy trực tiếp từ Supabase.</p>
                   </div>
                 </div>
                 <div className="divide-y divide-stone-200">
@@ -1398,7 +1394,6 @@ export default function ConfigurationStudioPage() {
               <div className="bg-white rounded-2xl p-5 sm:p-6 border border-stone-200 shadow-2xs space-y-4">
                 <div>
                   <h3 className="text-base font-bold">Ảnh khách mời gửi lên · {data.sharedPhotos.length}</h3>
-                  <p className="text-xs text-stone-500 mt-1">Ảnh được lưu trong Supabase Storage cùng tên người gửi trong dữ liệu ảnh.</p>
                 </div>
                 {data.sharedPhotos.length === 0 ? (
                   <p className="text-sm text-stone-500 py-4 text-center">Chưa có ảnh nào được gửi.</p>
