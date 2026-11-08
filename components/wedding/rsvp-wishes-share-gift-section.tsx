@@ -1,6 +1,7 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import {
   BankGiftInfo,
   RsvpSubmission,
@@ -75,6 +76,7 @@ export function RsvpWishesShareGiftSection({
   const [shareSuccess, setShareSuccess] = useState(false)
   const [shareError, setShareError] = useState('')
   const [isUploadingPhoto, setIsUploadingPhoto] = useState(false)
+  const guestPhotoInputRef = useRef<HTMLInputElement>(null)
 
   // 4. Copy Bank Account State
   const [copiedAccount, setCopiedAccount] = useState<string | null>(null)
@@ -650,18 +652,18 @@ export function RsvpWishesShareGiftSection({
           )}
         </div>
 
-        {/* Modal Upload Guest Photo */}
-        {showShareModal && (
+        {/* Modal đặt ngoài section để không bị overflow/transform của nội dung cắt trên mobile */}
+        {showShareModal && createPortal(
           <div
             role="dialog"
             aria-modal="true"
             aria-label="Gửi tặng ảnh cưới"
             onClick={() => setShowShareModal(false)}
-            className="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4"
+            className="fixed inset-0 z-[100] bg-black/70 backdrop-blur-sm flex items-center justify-center p-4"
           >
             <div
               onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-md rounded-2xl p-6 text-left border shadow-2xl space-y-4"
+              className="w-full max-w-md max-h-[calc(100dvh-2rem)] overflow-y-auto overscroll-contain rounded-2xl p-5 sm:p-6 text-left border shadow-2xl space-y-4"
               style={{
                 backgroundColor: colors.paper,
                 borderColor: colors.line,
@@ -687,8 +689,8 @@ export function RsvpWishesShareGiftSection({
                   <label className="block text-sm font-semibold mb-1.5" style={{ fontFamily: fonts.ui }}>
                     Chọn ảnh từ máy của bạn <span style={{ color: colors.accent }}>*</span>
                   </label>
-                  <label
-                    className="flex flex-col items-center justify-center border-2 border-dashed rounded-xl p-5 cursor-pointer transition-colors"
+                  <div
+                    className="flex flex-col items-center justify-center gap-3 border-2 border-dashed rounded-xl p-5"
                     style={{
                       borderColor: colors.accent,
                       backgroundColor: `${colors.soft}66`,
@@ -697,22 +699,33 @@ export function RsvpWishesShareGiftSection({
                     {guestPhotoPreview ? (
                       <img
                         src={guestPhotoPreview}
-                        alt="Xem trước"
-                        className="max-h-44 rounded-lg object-contain mb-2"
+                        alt="Xem trước ảnh đã chọn"
+                        className="max-h-48 max-w-full rounded-lg object-contain"
                       />
                     ) : (
                       <>
-                        <Upload className="w-7 h-7 mb-1.5" style={{ color: colors.accent }} />
-                        <span className="text-sm font-medium">Chạm để chọn ảnh từ điện thoại / máy tính</span>
+                        <Upload className="w-8 h-8" style={{ color: colors.accent }} />
+                        <span className="text-sm font-medium text-center">Chọn ảnh từ điện thoại hoặc máy tính</span>
                       </>
                     )}
                     <input
+                      ref={guestPhotoInputRef}
                       type="file"
                       accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp"
                       onChange={handleGuestFileChange}
-                      className="hidden"
+                      className="sr-only"
+                      aria-label="Chọn ảnh gửi tặng"
                     />
-                  </label>
+                    <button
+                      type="button"
+                      onClick={() => guestPhotoInputRef.current?.click()}
+                      className="min-h-11 rounded-full border px-5 py-2 text-sm font-semibold cursor-pointer"
+                      style={{ borderColor: colors.accent, color: colors.accentInk, backgroundColor: colors.page }}
+                    >
+                      {guestPhotoPreview ? 'Chọn ảnh khác' : 'Chọn ảnh'}
+                    </button>
+                    <p className="text-xs text-center" style={{ color: colors.muted }}>JPG, PNG hoặc WebP · Tối đa 5 MB</p>
+                  </div>
                 </div>
 
                 <div>
@@ -775,7 +788,8 @@ export function RsvpWishesShareGiftSection({
                 </button>
               </form>
             </div>
-          </div>
+          </div>,
+          document.body,
         )}
       </section>
 
