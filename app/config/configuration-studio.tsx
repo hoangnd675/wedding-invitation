@@ -82,7 +82,8 @@ export default function ConfigurationStudioPage() {
   } = useWeddingStore()
 
   const [activeTab, setActiveTab] = useState<ConfigTab>('theme-music')
-  const [expandedThemeSections, setExpandedThemeSections] = useState({ theme: true, fonts: true, effects: true, music: true })
+  const [expandedThemeSections, setExpandedThemeSections] = useState({ theme: false, fonts: false, effects: false, music: false })
+  const [expandedRsvpContent, setExpandedRsvpContent] = useState(false)
   const [showLivePreview, setShowLivePreview] = useState(false)
   const [previewCoverOpen, setPreviewCoverOpen] = useState(true)
   const [savedNotice, setSavedNotice] = useState(false)
@@ -1402,6 +1403,15 @@ export default function ConfigurationStudioPage() {
                 </div>
               </div>
 
+              <div className="bg-white rounded-2xl p-4 sm:p-5 border border-stone-200 shadow-2xs flex items-center justify-between gap-3">
+                <h3 className="font-bold text-base">Lời chúc &amp; RSVP</h3>
+                <button type="button" onClick={() => setExpandedRsvpContent(v => !v)} aria-expanded={expandedRsvpContent} className="shrink-0 inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold text-stone-700 bg-stone-100 hover:bg-stone-200">
+                  {expandedRsvpContent ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                  {expandedRsvpContent ? 'Thu nhỏ' : 'Mở rộng'}
+                </button>
+              </div>
+
+              {expandedRsvpContent && <>
               <div className="bg-white rounded-2xl p-5 sm:p-6 border border-stone-200 shadow-2xs space-y-3">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div>
@@ -1512,6 +1522,7 @@ export default function ConfigurationStudioPage() {
                   ))}
                 </div>
               </div>
+              </>}
             </div>
           )}
         </div>
