@@ -247,7 +247,16 @@ export function useWeddingStore() {
       id: 'sp-' + Date.now(),
       createdAt: 'Vừa xong',
     }
-    updateData(prev => ({ ...prev, sharedPhotos: [newPhoto, ...prev.sharedPhotos] }), false)
+    // Use the latest state after the asynchronous upload finishes so a concurrent
+    // RSVP/config update cannot overwrite or hide the newly submitted photo.
+    setData(prev => {
+      const next = {
+        ...prev,
+        sharedPhotos: [newPhoto, ...(prev.sharedPhotos || []).filter(item => item.id !== newPhoto.id)],
+      }
+      saveWeddingData(next, coupleSlug)
+      return next
+    })
     return newPhoto
   }, [updateData, coupleId])
 
