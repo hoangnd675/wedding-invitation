@@ -89,8 +89,12 @@ export function SectionHeader({
   )
 }
 
-function familyInfoText(value: string) {
-  return value.replace(/^(?:Con trai|Con gái)\s+/i, '').replace(/\s*&\s*/g, ' & ').trim()
+function familyInfoText(value: string, relationship: 'Con trai' | 'Con gái') {
+  const parents = value
+    .replace(/^(?:Con trai|Con gái)\s+/i, '')
+    .replace(/\s*&\s*/g, ' & ')
+    .trim()
+  return parents ? `${relationship} ${parents}` : ''
 }
 function familyInfoFontSize(value: string) {
   const length = Math.max(familyInfoText(value).length, 1)
@@ -190,7 +194,7 @@ export function CoupleStorySection({ data, theme, onOpenLightbox }: CoupleStoryS
             </h3>
             {data.groomFamilyInfo && (
               <p className="mt-2 w-full max-w-full text-center leading-relaxed whitespace-nowrap overflow-hidden" style={{ color: colors.muted, fontSize: familyInfoFontSize(data.groomFamilyInfo), letterSpacing: '-0.025em' }}>
-                {familyInfoText(data.groomFamilyInfo)}
+                {familyInfoText(data.groomFamilyInfo, 'Con trai')}
               </p>
             )}
           </ScrollReveal>
@@ -267,7 +271,7 @@ export function CoupleStorySection({ data, theme, onOpenLightbox }: CoupleStoryS
             </h3>
             {data.brideFamilyInfo && (
               <p className="mt-2 w-full max-w-full text-center leading-relaxed whitespace-nowrap overflow-hidden" style={{ color: colors.muted, fontSize: familyInfoFontSize(data.brideFamilyInfo), letterSpacing: '-0.025em' }}>
-                {familyInfoText(data.brideFamilyInfo)}
+                {familyInfoText(data.brideFamilyInfo, 'Con gái')}
               </p>
             )}
           </ScrollReveal>
