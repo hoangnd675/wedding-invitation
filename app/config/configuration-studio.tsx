@@ -90,6 +90,8 @@ export default function ConfigurationStudioPage() {
   const [musicUploadError, setMusicUploadError] = useState('')
   const [deletingPhotoId, setDeletingPhotoId] = useState<string | null>(null)
   const [photoDeleteError, setPhotoDeleteError] = useState('')
+  const [deletingRsvpId, setDeletingRsvpId] = useState<string | null>(null)
+  const [rsvpDeleteError, setRsvpDeleteError] = useState('')
   const [newPhotoUrl, setNewPhotoUrl] = useState('')
   const [newPhotoCaption, setNewPhotoCaption] = useState('')
   const [newPhotoEffect, setNewPhotoEffect] = useState<PhotoScrollEffect>('fade-in')
@@ -251,6 +253,32 @@ export default function ConfigurationStudioPage() {
       setPhotoDeleteError(error instanceof Error ? error.message : 'Không thể xóa ảnh. Vui lòng thử lại.')
     } finally {
       setDeletingPhotoId(null)
+    }
+  }
+
+
+  const handleDeleteRsvp = async (rsvp: (typeof data.rsvps)[number]) => {
+    if (!window.confirm(`Xóa xác nhận tham dự của ${rsvp.name}?`)) return
+
+    setDeletingRsvpId(rsvp.id)
+    setRsvpDeleteError('')
+    try {
+      const couple = new URLSearchParams(window.location.search).get('couple') || 'hai-hung-mi-mi'
+      const response = await fetch(`/api/admin/rsvps?id=${encodeURIComponent(rsvp.id)}&couple=${encodeURIComponent(couple)}`, {
+        method: 'DELETE',
+        cache: 'no-store',
+      })
+      const result = await response.json().catch(() => ({}))
+      if (!response.ok || !result.ok) throw new Error(result.error || 'Không thể xóa khách xác nhận.')
+
+      updateData(prev => ({
+        ...prev,
+        rsvps: prev.rsvps.filter(item => item.id !== rsvp.id),
+      }), false)
+    } catch (error) {
+      setRsvpDeleteError(error instanceof Error ? error.message : 'Không thể xóa khách xác nhận. Vui lòng thử lại.')
+    } finally {
+      setDeletingRsvpId(null)
     }
   }
 
@@ -1380,6 +1408,7 @@ export default function ConfigurationStudioPage() {
                     <h3 className="text-base font-bold">Danh sách khách xác nhận tham dự · {data.rsvps.length}</h3>
                   </div>
                 </div>
+                {rsvpDeleteError && <p role="alert" className="text-sm text-rose-700">{rsvpDeleteError}</p>}
                 <div className="divide-y divide-stone-200">
                   {data.rsvps.map((r) => (
                     <div key={r.id} className="py-3 flex items-center justify-between gap-4 text-sm">
@@ -1402,15 +1431,13 @@ export default function ConfigurationStudioPage() {
                       </div>
                       <button
                         type="button"
-                        onClick={() =>
-                          updateData((prev) => ({
-                            ...prev,
-                            rsvps: prev.rsvps.filter((item) => item.id !== r.id),
-                          }))
-                        }
-                        className="text-rose-600 hover:bg-rose-50 p-1.5 rounded-lg cursor-pointer"
+                        onClick={() => void handleDeleteRsvp(r)}
+                        disabled={deletingRsvpId === r.id}
+                        aria-label={`Xóa xác nhận của ${r.name}`}
+                        title={deletingRsvpId === r.id ? 'Đang xóa...' : 'Xóa khách xác nhận'}
+                        className="text-rose-600 hover:bg-rose-50 p-1.5 rounded-lg cursor-pointer disabled:opacity-50 disabled:cursor-wait"
                       >
-                        <Trash2 className="w-4 h-4" />
+                        <Trash2 className={`w-4 h-4 ${deletingRsvpId === r.id ? 'animate-pulse' : ''}`} />
                       </button>
                     </div>
                   ))}
