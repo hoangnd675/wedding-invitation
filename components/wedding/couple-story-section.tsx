@@ -90,7 +90,7 @@ export function SectionHeader({
 }
 
 function familyInfoText(value: string) {
-  return value.replace(/^(?:Con trai|Con gái)\\s+/i, '').replace(/\\s*&\\s*/g, ' & ').trim()
+  return value.replace(/^(?:Con trai|Con gái)\s+/i, '').replace(/\s*&\s*/g, ' & ').trim()
 }
 function familyInfoFontSize(value: string) {
   const length = Math.max(familyInfoText(value).length, 1)
