@@ -142,7 +142,7 @@ export function CoupleStorySection({ data, theme, onOpenLightbox }: CoupleStoryS
           indexLabel="01"
         />
 
-        <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-12 items-center gap-8 md:gap-5 relative z-10">
+        <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-12 items-start gap-8 md:gap-5 relative z-10">
           {/* Groom Card */}
           <ScrollReveal effect="blur-clear" className="md:col-span-5 flex flex-col items-center text-center">
             <span
@@ -203,7 +203,7 @@ export function CoupleStorySection({ data, theme, onOpenLightbox }: CoupleStoryS
           <ScrollReveal
             effect="zoom-in"
             delay={120}
-            className="md:col-span-2 flex flex-col items-center justify-center py-2"
+            className="md:col-span-2 flex flex-col items-center justify-center py-2 md:mt-[188px] md:py-0"
           >
             <div
               className="w-16 h-16 rounded-full flex items-center justify-center border"
