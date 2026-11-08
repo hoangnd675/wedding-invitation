@@ -96,8 +96,8 @@ function familyInfoText(value: string, relationship: 'Con trai' | 'Con gái') {
     .trim()
   return parents ? `${relationship} ${parents}` : ''
 }
-function familyInfoFontSize(value: string) {
-  const length = Math.max(familyInfoText(value).length, 1)
+function familyInfoFontSize(value: string, relationship: 'Con trai' | 'Con gái') {
+  const length = Math.max(familyInfoText(value, relationship).length, 1)
   // Fit the complete parents' line within the couple card on narrow and wide screens.
   return `${Math.max(0.58, Math.min(1.05, 44 / length))}rem`
 }
@@ -193,7 +193,7 @@ export function CoupleStorySection({ data, theme, onOpenLightbox }: CoupleStoryS
               {data.groomFullName}
             </h3>
             {data.groomFamilyInfo && (
-              <p className="mt-2 w-full max-w-full text-center leading-relaxed whitespace-nowrap overflow-hidden" style={{ color: colors.muted, fontSize: familyInfoFontSize(data.groomFamilyInfo), letterSpacing: '-0.025em' }}>
+              <p className="mt-2 w-full max-w-full text-center leading-relaxed whitespace-nowrap overflow-hidden" style={{ color: colors.muted, fontSize: familyInfoFontSize(data.groomFamilyInfo, 'Con trai'), letterSpacing: '-0.025em' }}>
                 {familyInfoText(data.groomFamilyInfo, 'Con trai')}
               </p>
             )}
@@ -270,7 +270,7 @@ export function CoupleStorySection({ data, theme, onOpenLightbox }: CoupleStoryS
               {data.brideFullName}
             </h3>
             {data.brideFamilyInfo && (
-              <p className="mt-2 w-full max-w-full text-center leading-relaxed whitespace-nowrap overflow-hidden" style={{ color: colors.muted, fontSize: familyInfoFontSize(data.brideFamilyInfo), letterSpacing: '-0.025em' }}>
+              <p className="mt-2 w-full max-w-full text-center leading-relaxed whitespace-nowrap overflow-hidden" style={{ color: colors.muted, fontSize: familyInfoFontSize(data.brideFamilyInfo, 'Con gái'), letterSpacing: '-0.025em' }}>
                 {familyInfoText(data.brideFamilyInfo, 'Con gái')}
               </p>
             )}
