@@ -76,6 +76,7 @@ export function RsvpWishesShareGiftSection({
   const [shareSuccess, setShareSuccess] = useState(false)
   const [shareError, setShareError] = useState('')
   const [isUploadingPhoto, setIsUploadingPhoto] = useState(false)
+  const [recentlySharedPhotos, setRecentlySharedPhotos] = useState<SharedGuestPhoto[]>([])
   const guestPhotoInputRef = useRef<HTMLInputElement>(null)
 
   // 4. Copy Bank Account State
@@ -162,11 +163,17 @@ export function RsvpWishesShareGiftSection({
     setIsUploadingPhoto(true)
     setShareError('')
     try {
-      await onAddSharedPhoto({
+      const savedPhoto = await onAddSharedPhoto({
         guestName: guestPhotoName.trim(),
         caption: guestPhotoCaption.trim() || 'Khoảnh khắc đẹp trong ngày vui!',
         src: guestPhotoPreview,
       })
+      if (savedPhoto && typeof savedPhoto === 'object' && 'src' in savedPhoto) {
+        setRecentlySharedPhotos(prev => [
+          savedPhoto as SharedGuestPhoto,
+          ...prev.filter(item => item.id !== (savedPhoto as SharedGuestPhoto).id),
+        ])
+      }
       setGuestPhotoName('')
       setGuestPhotoCaption('')
       setGuestPhotoPreview('')
@@ -614,42 +621,45 @@ export function RsvpWishesShareGiftSection({
           </ScrollReveal>
 
           {/* Shared Guest Photos Grid */}
-          {data.sharedPhotos.length > 0 && (
-            <div className="mt-12 grid grid-cols-2 sm:grid-cols-3 gap-4 text-left">
-              {data.sharedPhotos.map((sp, i) => (
-                <ScrollReveal
-                  key={sp.id}
-                  effect={i % 2 === 0 ? 'zoom-in' : 'blur-clear'}
-                  delay={i * 80}
-                >
-                  <div
+          {(() => {
+            const sharedPhotos = [
+              ...recentlySharedPhotos,
+              ...(data.sharedPhotos || []).filter(photo =>
+                !recentlySharedPhotos.some(recent => recent.id === photo.id)
+              ),
+            ]
+            return sharedPhotos.length > 0 ? (
+              <div className="mt-12 grid grid-cols-2 sm:grid-cols-3 gap-4 text-left">
+                {sharedPhotos.map((sp) => (
+                  <button
+                    key={sp.id}
+                    type="button"
                     onClick={() => onOpenLightbox?.(sp.src, `${sp.caption} — Ảnh từ ${sp.guestName}`)}
-                    className="group rounded-2xl overflow-hidden border shadow-sm cursor-pointer transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl"
-                    style={{
-                      backgroundColor: colors.paper,
-                      borderColor: colors.line,
-                    }}
+                    className="group min-w-0 overflow-hidden rounded-2xl border text-left shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+                    style={{ backgroundColor: colors.paper, borderColor: colors.line }}
+                    aria-label={`Xem ảnh của ${sp.guestName}`}
                   >
                     <div className="aspect-[4/3] overflow-hidden">
                       <img
                         src={sp.src}
-                        alt={sp.caption}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        alt={sp.caption || `Ảnh do ${sp.guestName} gửi`}
+                        loading="lazy"
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                       />
                     </div>
                     <div className="p-3.5">
-                      <p className="text-xs sm:text-sm font-medium line-clamp-2 mb-1" style={{ color: colors.ink }}>
+                      <p className="mb-1 line-clamp-2 text-xs font-medium sm:text-sm" style={{ color: colors.ink }}>
                         {sp.caption}
                       </p>
                       <p className="text-xs font-semibold" style={{ color: colors.accentInk, fontFamily: fonts.ui }}>
                         📷 {sp.guestName}
                       </p>
                     </div>
-                  </div>
-                </ScrollReveal>
-              ))}
-            </div>
-          )}
+                  </button>
+                ))}
+              </div>
+            ) : null
+          })()}
         </div>
 
         {/* Modal đặt ngoài section để không bị overflow/transform của nội dung cắt trên mobile */}
